@@ -1,0 +1,12 @@
+{
+  "name": "callsite-impact",
+  "private": true,
+  "description": "Workspace root. The deployable application is the console in frontend/; this file exists so a platform that builds from the repository root can find it.",
+  "workspaces": ["frontend"],
+  "scripts": {
+    "build": "npm run artifacts -w frontend && npm run build -w frontend"
+  },
+  "dependencies": {
+    "next": "^15.5.4"
+  }
+}
