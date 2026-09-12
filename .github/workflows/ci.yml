@@ -102,7 +102,12 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
+      # `npm install`, not `npm ci`. The lockfile is complete -- it pins
+      # @rollup/rollup-linux-x64-gnu and lightningcss-linux-x64-gnu with the right os/cpu and a
+      # resolved URL -- and `npm ci` skipped them anyway on this runner, installing 211 packages
+      # where a correct install is 216. vitest then died on a missing native module. `npm install`
+      # still honours the committed lockfile; it just resolves the platform's optional binaries.
+      - run: npm install --no-audit --no-fund
       - run: npx tsc --noEmit
       - run: npx vitest run
       # `npm run artifacts` copies the committed artifacts into the build root, because Vercel's
