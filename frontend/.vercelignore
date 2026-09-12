@@ -1,0 +1,5 @@
+# The CLI falls back to .gitignore when this file is absent, which would exclude `artifacts/` --
+# the two JSON files this console exists to render. Listing what to skip explicitly keeps them in.
+node_modules
+.next
+tests
