@@ -4,7 +4,10 @@
 question that matters is: *which of our call sites actually break?* A differ cannot answer it — it
 compares two documents and knows nothing about your code.**
 
-This repository answers it, and then proves the answer against the TypeScript compiler.
+This repository answers it, and then checks the answer against the TypeScript compiler.
+
+**Live: <https://callsite-impact.vercel.app>** — the result, every spec pair, and the compiler's
+verdict beside this tool's on each call site. No sign-in, nothing to run.
 
 ---
 

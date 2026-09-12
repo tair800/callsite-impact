@@ -29,18 +29,39 @@ There is no database. There is no vector index. There is nothing to connect to, 
 
 ## The public console
 
+**Live: <https://callsite-impact.vercel.app>**
+
 | Layer | Service | Plan | Region |
 |---|---|---|---|
 | Console | Vercel | Hobby | `fra1` |
-
-**Root directory: `frontend`.** The repository root is a Python project; Vercel must be pointed at
-the Next.js app or it will fail to detect a framework.
 
 **Environment variables: none required.** `IMPACT_API_BASE_URL` is read server-side when set, and
 when it is unset the console reads `artifacts/evaluation.json` and `artifacts/findings.json` from the
 checkout. The deployed site runs on the second path. The variable is deliberately **not** prefixed
 `NEXT_PUBLIC_`: it is read in server components and route handlers only, so no API address reaches
 the browser.
+
+### Deploying, and why it is a command rather than a push
+
+```bash
+make killtest                      # regenerate the artifacts, if the measurement changed
+cd frontend && npm run artifacts   # copy them next to the app
+npx vercel --prod                  # upload frontend/ as the deployment root
+```
+
+Git auto-deploy is **deliberately disconnected**, and the reason is worth writing down because the
+obvious setup does not work here.
+
+The console's `package.json` is in `frontend/`, but the artifacts it renders are committed *above*
+it in `artifacts/`. A deployment whose upload root is `frontend/` cannot see them at build time —
+`npm run artifacts` copies them in first, which is why that step exists. A deployment whose root is
+the repository cannot find a Next.js application, because there is no `package.json` there.
+
+Making the repository root an npm workspace solved the detection and then failed on a native module:
+`lightningcss` ships a per-platform binary, the root lockfile was generated on Windows, and the Linux
+builder had nothing to load. The frontend-scoped deployment already worked, with one configuration
+file instead of two, so that is what ships. A push-button deploy that fails on every commit is worse
+than a documented command.
 
 ## What CI guarantees about the numbers on the site
 
