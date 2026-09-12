@@ -119,6 +119,31 @@ rate is very comfortable to publish as a limitation; it was a missing table.
 
 ---
 
+## What you are looking at
+
+**The result** — the kill criterion, the system against both predeclared baselines, and a strict /
+abstaining toggle because showing one view alone would be a choice about which number to flatter.
+
+![The measured result](docs/screenshots/result.png)
+
+**Three verdicts side by side** — `CMP` is the compiler (ground truth), `SYS` is this tool, `BASE` is
+the naive baseline. The interesting rows are the disagreements, and the console filters to them.
+Every row on this screen where `CMP CLEAN` sits next to `BASE IMPACTED` is a call site a team would
+have opened, read, and closed again having changed nothing.
+
+![Compiler, system and baseline on the same call sites](docs/screenshots/verdicts.png)
+
+**Provenance** — every specification with the SHA-256 of the bytes the run actually read, so a
+reader can fetch the same file and check.
+
+![Provenance for every specification](docs/screenshots/provenance.png)
+
+Screenshots taken from the console rendering `artifacts/evaluation.json` and
+`artifacts/findings.json` — the same files CI re-measures and the same files the deployed site
+serves.
+
+---
+
 ## Run it
 
 ```bash

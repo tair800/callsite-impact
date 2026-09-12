@@ -218,7 +218,9 @@ export function MetricsComparison({
                     <span className={row.isSystem ? "text-[var(--color-text)]" : undefined}>
                       {row.label}
                     </span>
-                    <span className="block text-[10.5px] font-normal normal-case tracking-normal text-[var(--color-dim)]">
+                    {/* The note is prose in a numeric table: without a width it runs under the
+                        FN RATE column, which is the one number this table is built around. */}
+                    <span className="block max-w-[42ch] text-[10.5px] font-normal normal-case tracking-normal text-[var(--color-dim)]">
                       {row.note}
                     </span>
                   </th>
