@@ -1,0 +1,14 @@
+# The deployment is a Next.js console that reads two committed JSON artifacts. Nothing else in this
+# repository belongs in a build context, and without this the CLI uploads ~135 MB of vendor
+# specifications and compiler scratch that the site never reads.
+.git
+.venv
+work
+corpus/upstream
+corpus/diffs
+node_modules
+frontend/node_modules
+frontend/.next
+harness/node_modules
+harness/generated
+docs/screenshots

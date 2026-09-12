@@ -16,3 +16,5 @@ corpus/diffs/
 harness/generated/
 # Scratch space for generated types, call sites and compiler output.
 work/
+
+.vercel
