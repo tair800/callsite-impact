@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    name: Lint, type check and the offline suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --frozen
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run mypy
+      # No corpus, no node, no network, no credential. If this job needs any of those, the
+      # separation the project claims between its core types and its harness has been lost.
+      - run: uv run pytest -m "not corpus and not node"
+
+  measurement:
+    name: The measurement — the compiler oracle over the real corpus
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --frozen
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: harness/package-lock.json
+      - run: npm ci
+        working-directory: harness
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - name: Install the differ we consume rather than reimplement
+        run: |
+          go install github.com/oasdiff/oasdiff@v1.29.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      # The upstream specs are large and their revisions are pinned, so refetching them on every
+      # push buys nothing. The key includes the acquisition module: change which revisions are
+      # pinned and the cache is correctly missed.
+      - uses: actions/cache@v4
+        with:
+          path: |
+            corpus/upstream
+            corpus/diffs
+          key: corpus-${{ hashFiles('src/callsite_impact/corpus/acquire.py') }}
+
+      - name: Acquire the corpus
+        run: uv run python -m callsite_impact.corpus.acquire
+
+      - name: Run the measurement
+        run: uv run python -m callsite_impact.measure --out artifacts/fresh.json
+
+      # The committed artifact is what the README and the console render. If a push changes the
+      # measurement without regenerating it, the published numbers stop describing the code that
+      # produced them — the one failure this project cannot survive. Compared field by field rather
+      # than by `git diff`, because `generated_at` differs on every run by design and a byte
+      # comparison would fail always, which trains everyone to ignore it.
+      - name: The committed artifact must match what this commit measures
+        run: uv run python -m callsite_impact.gate --committed artifacts/evaluation.json --fresh artifacts/fresh.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evaluation
+          path: |
+            artifacts/evaluation.json
+            artifacts/fresh.json

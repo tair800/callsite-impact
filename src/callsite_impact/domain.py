@@ -4,8 +4,8 @@ Written before the stages that use them, because the interesting decisions in th
 decisions about what a *label* is, and those have to be settled before anything can be measured.
 
 The one that matters most is :class:`Expressibility`. A specification differ reports a change to a
-document; the TypeScript compiler reports a failure to typecheck. Those are not the same set, and the
-gap between them is not noise — it is the finding. ``maxLength`` decreasing is unambiguously a
+document; the TypeScript compiler reports a failure to typecheck. Those are not the same set, and
+the gap between them is not noise — it is the finding. ``maxLength`` decreasing is unambiguously a
 breaking change to an API and is **invisible** to a type system. Any verdict that treats a clean
 compile there as evidence of safety is lying, so the type below forces the question to be answered
 for every change class before a verdict can be formed.
@@ -28,8 +28,8 @@ __all__ = [
     "PropertyAccess",
     "SpecChange",
     "SpecPair",
-    "Verdict",
     "VendorSpec",
+    "Verdict",
     "callsite_id",
 ]
 
@@ -83,10 +83,10 @@ class Expressibility(enum.StrEnum):
     """
 
     TYPE_EXPRESSIBLE = "type_expressible"
-    """A call site can be made to fail on it: removals, renames, requiredness, type and enum shape."""
+    """A call site can be made to fail on it: removals, requiredness, type and enum shape."""
 
     NOT_TYPE_EXPRESSIBLE = "not_type_expressible"
-    """A runtime or prose constraint: `maxLength`, `pattern`, `minimum`, auth, rate limit, behaviour.
+    """A runtime or prose constraint: `maxLength`, `pattern`, `minimum`, auth, rate limit, prose.
 
     Compilation proves nothing here in either direction, so the only honest verdict is UNKNOWN.
     """
@@ -137,8 +137,8 @@ class PropertyAccess(_Frozen):
     """One property a call site touches, with the position the source has it at.
 
     ``optional_chained`` exists because ``a?.b`` and ``a.b`` fail differently when ``b`` becomes
-    optional: under ``strict`` the second stops assigning to a non-optional target and the first does
-    not. A classifier that cannot see the difference cannot get `became-optional` right.
+    optional: under ``strict`` the second stops assigning to a non-optional target and the first
+    does not. A classifier that cannot see the difference cannot get `became-optional` right.
     """
 
     path: tuple[str, ...]
@@ -147,6 +147,15 @@ class PropertyAccess(_Frozen):
     optional_chained: bool = False
     literal_value: str | None = None
     """The literal passed, when there is one. Needed to decide enum-member removals."""
+    pinned: bool = False
+    """The read flows into something that names its type — an annotated declaration, or the
+    discriminant of a ``switch`` whose default asserts ``never``.
+
+    This is what every *widening* change turns on: a member added to a response enum, a property
+    becoming nullable, a type changing. Widening breaks a call site that wrote the narrow type down
+    and leaves ``const x = res.a`` alone. Both shapes are plain tokens in the syntax tree, so a
+    parser can see them without resolving a single type — which is why this field can exist without
+    the extractor crossing into the answer key."""
 
 
 class CallsiteFacts(_Frozen):
@@ -154,8 +163,8 @@ class CallsiteFacts(_Frozen):
 
     Produced by the extractor in `harness/`, which builds a TypeScript AST and walks it. The guard
     test in `tests/test_oracle_boundary.py` fails the build if that extractor ever reaches for
-    `createProgram` or `getTypeChecker`, because the moment it does, the system under test is reading
-    the answer key.
+    `createProgram` or `getTypeChecker`, because the moment it does, the system under test is
+    reading the answer key.
     """
 
     operation_key: str
@@ -245,6 +254,9 @@ class Finding(_Frozen):
         "change_not_expressible_in_type_system",
         "property_path_unparsable",
         "property_path_shape_unsupported",
+        "pins_widened_response_type",
+        "reads_through_now_nullable_property",
+        "supplies_a_request_body_that_was_removed",
     ]
     change: SpecChange
     callsite_file: str

@@ -28,6 +28,11 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/callsite_impact"]
 
+# Without this marker the package installs as untyped, and mypy silently downgrades every
+# intra-package import to `Any` -- so a strict type check passes while checking almost nothing.
+[tool.hatch.build.targets.wheel.force-include]
+"src/callsite_impact/py.typed" = "callsite_impact/py.typed"
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"

@@ -1,0 +1,915 @@
+{
+  "schema_version": "1",
+  "generated_at": "2026-09-12T06:56:40.261135+00:00",
+  "run": {
+    "pairs": 18,
+    "vendors": [
+      "adyen",
+      "twilio",
+      "xero"
+    ],
+    "callsites_generated": 1476,
+    "callsites_admitted": 1338,
+    "callsites_discarded": 138,
+    "compiler_breakages": 94,
+    "compiler_clean": 1244,
+    "candidate_findings": 10642
+  },
+  "provenance": [
+    {
+      "pair_id": "adyen-checkout-v67-to-v68",
+      "vendor": "adyen",
+      "service": "checkout",
+      "before_revision": "v67",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "57ebef757f5e62d29f7a21d1922c58dd6f196a40ffddc2ae3d008727fb41fa18",
+      "after_revision": "v68",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "8b940a328c622be42a8b13ed64ff3ab8cbca1430b12a9cdf736a1a062ade5a48",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/CheckoutService-v68.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-checkout-v68-to-v69",
+      "vendor": "adyen",
+      "service": "checkout",
+      "before_revision": "v68",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "8b940a328c622be42a8b13ed64ff3ab8cbca1430b12a9cdf736a1a062ade5a48",
+      "after_revision": "v69",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "466fca4656e34f42d07e87026be098f90903612576aecc2f823989b45b2a73e3",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/CheckoutService-v69.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-checkout-v69-to-v70",
+      "vendor": "adyen",
+      "service": "checkout",
+      "before_revision": "v69",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "466fca4656e34f42d07e87026be098f90903612576aecc2f823989b45b2a73e3",
+      "after_revision": "v70",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "a2d1f411288c78b1f34fd19ecfb037d37936e9d31e857ccdac5f838084554306",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/CheckoutService-v70.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-checkout-v70-to-v71",
+      "vendor": "adyen",
+      "service": "checkout",
+      "before_revision": "v70",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "a2d1f411288c78b1f34fd19ecfb037d37936e9d31e857ccdac5f838084554306",
+      "after_revision": "v71",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "fd59f89f18d134f901d6d42b7aabad1c8afd4e2eb733823ba50944c034f1095a",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/CheckoutService-v71.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-checkout-v71-to-v72",
+      "vendor": "adyen",
+      "service": "checkout",
+      "before_revision": "v71",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "fd59f89f18d134f901d6d42b7aabad1c8afd4e2eb733823ba50944c034f1095a",
+      "after_revision": "v72",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "f4081494707eb5ff6486397b366079b5375fcedb666bbe1604fe91bc01a4affb",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/CheckoutService-v72.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-balance-platform-v1-to-v2",
+      "vendor": "adyen",
+      "service": "balance-platform",
+      "before_revision": "v1",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "c3d956efeb4f8cff512077378cfb1d9c9b38fd720aa694dec02cae327c365ec6",
+      "after_revision": "v2",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "8761ac1a9aab15ff6ae84bf8cdf83ca2a2926c5eb0d5d59b64fdbc18911d9ab4",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/BalancePlatformService-v2.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-account-v5-to-v6",
+      "vendor": "adyen",
+      "service": "account",
+      "before_revision": "v5",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "06cbe90ffec2c819d404de1a4ec89f6f0eb9e95b9110e230afc01f87c1cf8e23",
+      "after_revision": "v6",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "8de73063832f9869170c915ca39220cb876e4f185f23dd22e9fc42ee3efd9e3e",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/AccountService-v6.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-bin-lookup-v52-to-v53",
+      "vendor": "adyen",
+      "service": "bin-lookup",
+      "before_revision": "v52",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "5d10c90ba84e214dcd7332e45f3de124e95667ffb19bf3aa94d029c035b6a14d",
+      "after_revision": "v53",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "7843c3eff43b09f4e499afa9a6b126c37efbef35c59f280bdfdb54712ed1f530",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/BinLookupService-v53.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "adyen-bin-lookup-v53-to-v54",
+      "vendor": "adyen",
+      "service": "bin-lookup",
+      "before_revision": "v53",
+      "before_date": "2026-08-04T10:21:09+02:00",
+      "before_sha256": "7843c3eff43b09f4e499afa9a6b126c37efbef35c59f280bdfdb54712ed1f530",
+      "after_revision": "v54",
+      "after_date": "2026-08-04T10:21:09+02:00",
+      "after_sha256": "a60793003268bd224b57469e1968fc2902584198bc019b678354c5c3e2e50495",
+      "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/BinLookupService-v54.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-flex-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "service": "flex",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "c7218b2b47f1cc38e45078f857fb640bb4d474550520238eec350da6214f090b",
+      "after_revision": "591755b562834daae097da2371e821f349c5f489",
+      "after_date": "2026-08-11T16:43:54+05:30",
+      "after_sha256": "ea1db919b6ccc106a1b40807965c867fbf13cd82771486de8c9e305d26bac177",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_flex_v1.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-messaging-111a7cb94705-to-5aa7f31977ce",
+      "vendor": "twilio",
+      "service": "messaging",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "4cb4c36209be864acbe10398d29999ab49749e4e3ac042a2bd775f91a4d2f6bc",
+      "after_revision": "5aa7f31977ce5812f7b7bc1f46a38555ebaa2888",
+      "after_date": "2026-09-09T16:12:33+05:30",
+      "after_sha256": "611c6fde586347615039a7d8c87a4b10d39c6d8566b7d1a691353ef995aaa473",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/5aa7f31977ce5812f7b7bc1f46a38555ebaa2888/spec/json/twilio_messaging_v1.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-verify-111a7cb94705-to-5aa7f31977ce",
+      "vendor": "twilio",
+      "service": "verify",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "aadc0f7830beea28ab2c4f78d641d80cd4e7f00ce14b5c5653fbaf721a6e0750",
+      "after_revision": "5aa7f31977ce5812f7b7bc1f46a38555ebaa2888",
+      "after_date": "2026-09-09T16:12:33+05:30",
+      "after_sha256": "853929e61f260cca1b7d84d90f96396d00ded6915521329daf053fa1e1befff8",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/5aa7f31977ce5812f7b7bc1f46a38555ebaa2888/spec/json/twilio_verify_v2.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-taskrouter-111a7cb94705-to-55a17be6f0f1",
+      "vendor": "twilio",
+      "service": "taskrouter",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "9fbdf5e42706f4ca0905b67f32106557ed5ed9e46eeee3908eb3981d7d64b385",
+      "after_revision": "55a17be6f0f130e5d529f92c0bf774254bb0f1d1",
+      "after_date": "2026-02-05T12:23:31Z",
+      "after_sha256": "f431d2bc66ba14373a452e0e6d3795cb1576cf6c2e15352b5330b22a4d34d0bf",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/55a17be6f0f130e5d529f92c0bf774254bb0f1d1/spec/json/twilio_taskrouter_v1.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-conversations-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "service": "conversations",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "c738d010b2df4f8e0acb7951671c6c7a7de0d08ab630e8e22f3734da30dda31a",
+      "after_revision": "591755b562834daae097da2371e821f349c5f489",
+      "after_date": "2026-08-11T16:43:54+05:30",
+      "after_sha256": "6a37056c7727c1c1ce4d892de95963ccbdc479b5d2c44e867c44fe42d8e0355b",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_conversations_v1.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "twilio-events-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "service": "events",
+      "before_revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+      "before_date": "2020-12-08T22:01:44Z",
+      "before_sha256": "b11f4684ee6d74a46013364bacd0c7efaf14e5373a903187284baa59c6b634b1",
+      "after_revision": "591755b562834daae097da2371e821f349c5f489",
+      "after_date": "2026-08-11T16:43:54+05:30",
+      "after_sha256": "140a58be411abe4686c0b9caef7e52a0e6be73ee7475caaae213200d8054c161",
+      "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_events_v1.json",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "xero-bankfeeds-33d2244c8f36-to-448060d7829c",
+      "vendor": "xero",
+      "service": "bankfeeds",
+      "before_revision": "33d2244c8f368889758fa758d26a04aeb6c55b68",
+      "before_date": "2020-09-25T13:19:01-07:00",
+      "before_sha256": "ad9d0b188d07475c340cc104b9afd17686ad38a017f558ce4e5ff1b62c58a60b",
+      "after_revision": "448060d7829cae23166a2e443be48c2f2422280f",
+      "after_date": "2026-09-03T22:30:59Z",
+      "after_sha256": "4a3da073b8d86d6aa64788c7e45dd90dc3892079aad3deb8e40ec6ee862a4f0c",
+      "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero_bankfeeds.yaml",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "xero-payroll-au-54d7cdb60c32-to-448060d7829c",
+      "vendor": "xero",
+      "service": "payroll-au",
+      "before_revision": "54d7cdb60c32e39df438babc570e79993d4518cc",
+      "before_date": "2020-09-24T13:30:57-07:00",
+      "before_sha256": "4388405b3c87a328abcd189dc59aecea37c8dad146bcf2d75710d2b0ed2d90d9",
+      "after_revision": "448060d7829cae23166a2e443be48c2f2422280f",
+      "after_date": "2026-09-03T22:30:59Z",
+      "after_sha256": "a8cfa1754ad74bc451f588b5847fd043e21416b215545be21de666ac5d9b4bc7",
+      "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero-payroll-au.yaml",
+      "licence": "MIT"
+    },
+    {
+      "pair_id": "xero-files-eca25676d529-to-448060d7829c",
+      "vendor": "xero",
+      "service": "files",
+      "before_revision": "eca25676d52969bf6833eed83f5fe95d3ce47c53",
+      "before_date": "2020-09-24T13:27:40-07:00",
+      "before_sha256": "b46fe3a936fe2c69464e980157d2c9bbdf16842c0cb456853df386dccdf90cfe",
+      "after_revision": "448060d7829cae23166a2e443be48c2f2422280f",
+      "after_date": "2026-09-03T22:30:59Z",
+      "after_sha256": "5f3a18e424ed4e91febc559aab0a76b74a24a6c617ced44f13d697a5edd47800",
+      "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero_files.yaml",
+      "licence": "MIT"
+    }
+  ],
+  "per_pair": [
+    {
+      "pair_id": "adyen-account-v5-to-v6",
+      "vendor": "adyen",
+      "callsites_admitted": 68,
+      "candidate_pairs": 92,
+      "breakage_callsites": 3,
+      "compiler_labels": 3
+    },
+    {
+      "pair_id": "adyen-balance-platform-v1-to-v2",
+      "vendor": "adyen",
+      "callsites_admitted": 133,
+      "candidate_pairs": 956,
+      "breakage_callsites": 33,
+      "compiler_labels": 103
+    },
+    {
+      "pair_id": "adyen-bin-lookup-v52-to-v53",
+      "vendor": "adyen",
+      "callsites_admitted": 8,
+      "candidate_pairs": 4,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "adyen-bin-lookup-v53-to-v54",
+      "vendor": "adyen",
+      "callsites_admitted": 8,
+      "candidate_pairs": 0,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "adyen-checkout-v67-to-v68",
+      "vendor": "adyen",
+      "callsites_admitted": 66,
+      "candidate_pairs": 8,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "adyen-checkout-v68-to-v69",
+      "vendor": "adyen",
+      "callsites_admitted": 69,
+      "candidate_pairs": 8,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "adyen-checkout-v69-to-v70",
+      "vendor": "adyen",
+      "callsites_admitted": 74,
+      "candidate_pairs": 20,
+      "breakage_callsites": 8,
+      "compiler_labels": 14
+    },
+    {
+      "pair_id": "adyen-checkout-v70-to-v71",
+      "vendor": "adyen",
+      "callsites_admitted": 72,
+      "candidate_pairs": 0,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "adyen-checkout-v71-to-v72",
+      "vendor": "adyen",
+      "callsites_admitted": 74,
+      "candidate_pairs": 44,
+      "breakage_callsites": 2,
+      "compiler_labels": 2
+    },
+    {
+      "pair_id": "twilio-conversations-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "callsites_admitted": 246,
+      "candidate_pairs": 2766,
+      "breakage_callsites": 17,
+      "compiler_labels": 17
+    },
+    {
+      "pair_id": "twilio-events-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "callsites_admitted": 45,
+      "candidate_pairs": 374,
+      "breakage_callsites": 4,
+      "compiler_labels": 6
+    },
+    {
+      "pair_id": "twilio-flex-111a7cb94705-to-591755b56283",
+      "vendor": "twilio",
+      "callsites_admitted": 48,
+      "candidate_pairs": 803,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "twilio-messaging-111a7cb94705-to-5aa7f31977ce",
+      "vendor": "twilio",
+      "callsites_admitted": 44,
+      "candidate_pairs": 694,
+      "breakage_callsites": 2,
+      "compiler_labels": 2
+    },
+    {
+      "pair_id": "twilio-taskrouter-111a7cb94705-to-55a17be6f0f1",
+      "vendor": "twilio",
+      "callsites_admitted": 188,
+      "candidate_pairs": 2574,
+      "breakage_callsites": 0,
+      "compiler_labels": 0
+    },
+    {
+      "pair_id": "twilio-verify-111a7cb94705-to-5aa7f31977ce",
+      "vendor": "twilio",
+      "callsites_admitted": 131,
+      "candidate_pairs": 1521,
+      "breakage_callsites": 7,
+      "compiler_labels": 7
+    },
+    {
+      "pair_id": "xero-bankfeeds-33d2244c8f36-to-448060d7829c",
+      "vendor": "xero",
+      "callsites_admitted": 22,
+      "candidate_pairs": 530,
+      "breakage_callsites": 5,
+      "compiler_labels": 5
+    },
+    {
+      "pair_id": "xero-files-eca25676d529-to-448060d7829c",
+      "vendor": "xero",
+      "callsites_admitted": 22,
+      "candidate_pairs": 166,
+      "breakage_callsites": 8,
+      "compiler_labels": 14
+    },
+    {
+      "pair_id": "xero-payroll-au-54d7cdb60c32-to-448060d7829c",
+      "vendor": "xero",
+      "callsites_admitted": 20,
+      "candidate_pairs": 82,
+      "breakage_callsites": 5,
+      "compiler_labels": 6
+    }
+  ],
+  "total_compiler_labels": 179,
+  "unclassified_changes": 0,
+  "kill_criterion": {
+    "threshold": 60,
+    "vendors_required": 3,
+    "observed_breakages": 94,
+    "observed_vendors": 3,
+    "passed": true
+  },
+  "system": {
+    "pooled": {
+      "scope": "pooled",
+      "callsites": 1338,
+      "truly_impacted": 94,
+      "truly_clean": 1244,
+      "predicted_impacted": 95,
+      "predicted_unaffected": 1169,
+      "predicted_unknown": 74,
+      "strict": {
+        "counts": {
+          "true_positives": 91,
+          "false_positives": 4,
+          "true_negatives": 1240,
+          "false_negatives": 3
+        },
+        "false_negative_rate": 0.031914893617021274,
+        "false_positive_rate": 0.003215434083601286,
+        "precision": 0.9578947368421052,
+        "recall": 0.9680851063829787,
+        "f1": 0.962962962962963,
+        "callsites_excluded_as_abstention": 0
+      },
+      "abstaining": {
+        "counts": {
+          "true_positives": 91,
+          "false_positives": 4,
+          "true_negatives": 1166,
+          "false_negatives": 3
+        },
+        "false_negative_rate": 0.031914893617021274,
+        "false_positive_rate": 0.003418803418803419,
+        "precision": 0.9578947368421052,
+        "recall": 0.9680851063829787,
+        "f1": 0.962962962962963,
+        "callsites_excluded_as_abstention": 74
+      },
+      "candidate_pairs": 10642,
+      "unknown_pairs": 235,
+      "suppressed_pairs": 0,
+      "abstention_rate": 0.02208231535425672
+    },
+    "by_vendor": [
+      {
+        "scope": "adyen",
+        "callsites": 572,
+        "truly_impacted": 46,
+        "truly_clean": 526,
+        "predicted_impacted": 50,
+        "predicted_unaffected": 500,
+        "predicted_unknown": 22,
+        "strict": {
+          "counts": {
+            "true_positives": 46,
+            "false_positives": 4,
+            "true_negatives": 522,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.0076045627376425855,
+          "precision": 0.92,
+          "recall": 1.0,
+          "f1": 0.9583333333333334,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 46,
+            "false_positives": 4,
+            "true_negatives": 500,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.007936507936507936,
+          "precision": 0.92,
+          "recall": 1.0,
+          "f1": 0.9583333333333334,
+          "callsites_excluded_as_abstention": 22
+        },
+        "candidate_pairs": 1132,
+        "unknown_pairs": 159,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.14045936395759717
+      },
+      {
+        "scope": "twilio",
+        "callsites": 702,
+        "truly_impacted": 30,
+        "truly_clean": 672,
+        "predicted_impacted": 30,
+        "predicted_unaffected": 620,
+        "predicted_unknown": 52,
+        "strict": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 0,
+            "true_negatives": 672,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 0,
+            "true_negatives": 620,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "callsites_excluded_as_abstention": 52
+        },
+        "candidate_pairs": 8732,
+        "unknown_pairs": 76,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.008703618873110398
+      },
+      {
+        "scope": "xero",
+        "callsites": 64,
+        "truly_impacted": 18,
+        "truly_clean": 46,
+        "predicted_impacted": 15,
+        "predicted_unaffected": 49,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 15,
+            "false_positives": 0,
+            "true_negatives": 46,
+            "false_negatives": 3
+          },
+          "false_negative_rate": 0.16666666666666666,
+          "false_positive_rate": 0.0,
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "f1": 0.9090909090909091,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 15,
+            "false_positives": 0,
+            "true_negatives": 46,
+            "false_negatives": 3
+          },
+          "false_negative_rate": 0.16666666666666666,
+          "false_positive_rate": 0.0,
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "f1": 0.9090909090909091,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 778,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      }
+    ]
+  },
+  "baseline_touches_changed_operation": {
+    "pooled": {
+      "scope": "pooled",
+      "callsites": 1338,
+      "truly_impacted": 94,
+      "truly_clean": 1244,
+      "predicted_impacted": 895,
+      "predicted_unaffected": 443,
+      "predicted_unknown": 0,
+      "strict": {
+        "counts": {
+          "true_positives": 94,
+          "false_positives": 801,
+          "true_negatives": 443,
+          "false_negatives": 0
+        },
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.6438906752411575,
+        "precision": 0.10502793296089385,
+        "recall": 1.0,
+        "f1": 0.19009100101112233,
+        "callsites_excluded_as_abstention": 0
+      },
+      "abstaining": {
+        "counts": {
+          "true_positives": 94,
+          "false_positives": 801,
+          "true_negatives": 443,
+          "false_negatives": 0
+        },
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.6438906752411575,
+        "precision": 0.10502793296089385,
+        "recall": 1.0,
+        "f1": 0.19009100101112233,
+        "callsites_excluded_as_abstention": 0
+      },
+      "candidate_pairs": 10642,
+      "unknown_pairs": 0,
+      "suppressed_pairs": 0,
+      "abstention_rate": 0.0
+    },
+    "by_vendor": [
+      {
+        "scope": "adyen",
+        "callsites": 572,
+        "truly_impacted": 46,
+        "truly_clean": 526,
+        "predicted_impacted": 142,
+        "predicted_unaffected": 430,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 46,
+            "false_positives": 96,
+            "true_negatives": 430,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.18250950570342206,
+          "precision": 0.323943661971831,
+          "recall": 1.0,
+          "f1": 0.4893617021276596,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 46,
+            "false_positives": 96,
+            "true_negatives": 430,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.18250950570342206,
+          "precision": 0.323943661971831,
+          "recall": 1.0,
+          "f1": 0.4893617021276596,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 1132,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      },
+      {
+        "scope": "twilio",
+        "callsites": 702,
+        "truly_impacted": 30,
+        "truly_clean": 672,
+        "predicted_impacted": 702,
+        "predicted_unaffected": 0,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 672,
+            "true_negatives": 0,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 1.0,
+          "precision": 0.042735042735042736,
+          "recall": 1.0,
+          "f1": 0.08196721311475409,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 672,
+            "true_negatives": 0,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 1.0,
+          "precision": 0.042735042735042736,
+          "recall": 1.0,
+          "f1": 0.08196721311475409,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 8732,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      },
+      {
+        "scope": "xero",
+        "callsites": 64,
+        "truly_impacted": 18,
+        "truly_clean": 46,
+        "predicted_impacted": 51,
+        "predicted_unaffected": 13,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 18,
+            "false_positives": 33,
+            "true_negatives": 13,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.717391304347826,
+          "precision": 0.35294117647058826,
+          "recall": 1.0,
+          "f1": 0.5217391304347826,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 18,
+            "false_positives": 33,
+            "true_negatives": 13,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 0.717391304347826,
+          "precision": 0.35294117647058826,
+          "recall": 1.0,
+          "f1": 0.5217391304347826,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 778,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      }
+    ]
+  },
+  "baseline_err_level_only": {
+    "pooled": {
+      "scope": "pooled",
+      "callsites": 1338,
+      "truly_impacted": 94,
+      "truly_clean": 1244,
+      "predicted_impacted": 800,
+      "predicted_unaffected": 538,
+      "predicted_unknown": 0,
+      "strict": {
+        "counts": {
+          "true_positives": 76,
+          "false_positives": 724,
+          "true_negatives": 520,
+          "false_negatives": 18
+        },
+        "false_negative_rate": 0.19148936170212766,
+        "false_positive_rate": 0.5819935691318328,
+        "precision": 0.095,
+        "recall": 0.8085106382978723,
+        "f1": 0.17002237136465326,
+        "callsites_excluded_as_abstention": 0
+      },
+      "abstaining": {
+        "counts": {
+          "true_positives": 76,
+          "false_positives": 724,
+          "true_negatives": 520,
+          "false_negatives": 18
+        },
+        "false_negative_rate": 0.19148936170212766,
+        "false_positive_rate": 0.5819935691318328,
+        "precision": 0.095,
+        "recall": 0.8085106382978723,
+        "f1": 0.17002237136465326,
+        "callsites_excluded_as_abstention": 0
+      },
+      "candidate_pairs": 9092,
+      "unknown_pairs": 0,
+      "suppressed_pairs": 0,
+      "abstention_rate": 0.0
+    },
+    "by_vendor": [
+      {
+        "scope": "adyen",
+        "callsites": 572,
+        "truly_impacted": 46,
+        "truly_clean": 526,
+        "predicted_impacted": 59,
+        "predicted_unaffected": 513,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 29,
+            "false_positives": 30,
+            "true_negatives": 496,
+            "false_negatives": 17
+          },
+          "false_negative_rate": 0.3695652173913043,
+          "false_positive_rate": 0.057034220532319393,
+          "precision": 0.4915254237288136,
+          "recall": 0.6304347826086957,
+          "f1": 0.5523809523809524,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 29,
+            "false_positives": 30,
+            "true_negatives": 496,
+            "false_negatives": 17
+          },
+          "false_negative_rate": 0.3695652173913043,
+          "false_positive_rate": 0.057034220532319393,
+          "precision": 0.4915254237288136,
+          "recall": 0.6304347826086957,
+          "f1": 0.5523809523809524,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 387,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      },
+      {
+        "scope": "twilio",
+        "callsites": 702,
+        "truly_impacted": 30,
+        "truly_clean": 672,
+        "predicted_impacted": 702,
+        "predicted_unaffected": 0,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 672,
+            "true_negatives": 0,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 1.0,
+          "precision": 0.042735042735042736,
+          "recall": 1.0,
+          "f1": 0.08196721311475409,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 30,
+            "false_positives": 672,
+            "true_negatives": 0,
+            "false_negatives": 0
+          },
+          "false_negative_rate": 0.0,
+          "false_positive_rate": 1.0,
+          "precision": 0.042735042735042736,
+          "recall": 1.0,
+          "f1": 0.08196721311475409,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 8561,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      },
+      {
+        "scope": "xero",
+        "callsites": 64,
+        "truly_impacted": 18,
+        "truly_clean": 46,
+        "predicted_impacted": 39,
+        "predicted_unaffected": 25,
+        "predicted_unknown": 0,
+        "strict": {
+          "counts": {
+            "true_positives": 17,
+            "false_positives": 22,
+            "true_negatives": 24,
+            "false_negatives": 1
+          },
+          "false_negative_rate": 0.05555555555555555,
+          "false_positive_rate": 0.4782608695652174,
+          "precision": 0.4358974358974359,
+          "recall": 0.9444444444444444,
+          "f1": 0.5964912280701755,
+          "callsites_excluded_as_abstention": 0
+        },
+        "abstaining": {
+          "counts": {
+            "true_positives": 17,
+            "false_positives": 22,
+            "true_negatives": 24,
+            "false_negatives": 1
+          },
+          "false_negative_rate": 0.05555555555555555,
+          "false_positive_rate": 0.4782608695652174,
+          "precision": 0.4358974358974359,
+          "recall": 0.9444444444444444,
+          "f1": 0.5964912280701755,
+          "callsites_excluded_as_abstention": 0
+        },
+        "candidate_pairs": 144,
+        "unknown_pairs": 0,
+        "suppressed_pairs": 0,
+        "abstention_rate": 0.0
+      }
+    ]
+  },
+  "headline_false_negative_rate": 0.031914893617021274,
+  "abstention_rate": 0.02208231535425672
+}

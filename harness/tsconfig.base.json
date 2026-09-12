@@ -1,0 +1,13 @@
+{
+  "//": "The single source of truth for how call sites are typechecked. run-tsc.mjs reads this file and inlines these options into the tsconfig.json it writes beside the call sites, so a reader can reproduce a run by hand with `npx tsc -p <callsites-dir>`. Changing anything here changes the oracle, so it is committed and diffable rather than buried in a script.",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": []
+  }
+}

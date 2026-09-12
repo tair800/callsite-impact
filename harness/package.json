@@ -1,0 +1,21 @@
+{
+  "name": "callsite-impact-harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript workspace for callsite-impact: spec-to-types generation, the tsc oracle, and the parser-only call-site fact extractor.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "gen-types": "node scripts/gen-types.mjs",
+    "extract-facts": "node scripts/extract-facts.mjs",
+    "run-tsc": "node scripts/run-tsc.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "4.1.0",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

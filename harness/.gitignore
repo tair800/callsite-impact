@@ -1,0 +1,5 @@
+node_modules/
+# Every run rewrites this: generated types, generated call sites, the tsconfig run-tsc writes beside
+# them, and the JSON the two readers produce. Nothing here is authored, so nothing here is committed.
+generated/
+*.tsbuildinfo

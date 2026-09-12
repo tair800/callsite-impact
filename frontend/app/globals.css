@@ -1,0 +1,309 @@
+@import "tailwindcss";
+
+/*
+ * A developer tool, not a marketing page. Dark, dense, no motion.
+ *
+ * Chip colours are plain classes rather than composed utility strings for two reasons: a
+ * constructed class name is invisible to Tailwind's scanner, and a verdict is shared vocabulary
+ * that should have exactly one definition. `lib/verdicts.ts` names these and nothing else does.
+ *
+ * The palette carries one argument. IMPACTED is red and UNAFFECTED is green, which is the obvious
+ * pairing — but UNKNOWN is deliberately *neither*, and is not amber either, because amber reads as
+ * "nearly bad" and would turn an abstention into a soft breakage. It is violet: a different axis,
+ * not a point on the red-green one.
+ */
+
+@theme {
+  --color-ink: #0a0d12;
+  --color-panel: #11161d;
+  --color-panel-2: #171d26;
+  --color-line: #242c38;
+  --color-line-soft: #1b222c;
+  --color-text: #e6ebf2;
+  --color-muted: #97a3b4;
+  --color-dim: #7b8799;
+  --color-accent: #6ea8fe;
+
+  --font-mono:
+    ui-monospace, "SFMono-Regular", "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-text);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: #1e3a5f;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ---- Chips ----------------------------------------------------------------------------- */
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    padding: 1px 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chip-impacted {
+    background: #37141a;
+    border-color: #63232c;
+    color: #ff8f9b;
+  }
+
+  .chip-unaffected {
+    background: #0d2a20;
+    border-color: #1a4a38;
+    color: #5fd6a4;
+  }
+
+  /* Its own axis. Not red, not green, and deliberately not amber. */
+  .chip-unknown {
+    background: #221b3a;
+    border-color: #3d3270;
+    color: #b9a7ff;
+  }
+
+  .chip-unrecognised {
+    background: #1a212b;
+    border-color: #2c3644;
+    color: #97a3b4;
+  }
+
+  /* ---- Expressibility --------------------------------------------------------------------- */
+
+  .chip-expressible {
+    background: transparent;
+    border-color: #24486e;
+    color: #86c2ff;
+    font-weight: 500;
+  }
+
+  /* The changes no compiler can decide. Loud on purpose: they are the reason UNKNOWN exists. */
+  .chip-inexpressible {
+    background: #2a1440;
+    border-color: #5a3a94;
+    color: #c9b3ff;
+    font-weight: 700;
+  }
+
+  .chip-unclassified {
+    background: #241a2e;
+    border-color: #45355a;
+    color: #b39ec9;
+    font-weight: 500;
+  }
+
+  /* A change row whose class the type system cannot express gets a left rail, so the block of
+     them an oasdiff run produces is countable by eye without reading a single chip. */
+  .change-inexpressible {
+    border-left: 3px solid #5a3a94;
+    background: #17121f;
+  }
+
+  .change-expressible {
+    border-left: 3px solid #24486e;
+  }
+
+  .change-unclassified {
+    border-left: 3px solid #45355a;
+    background: #171320;
+  }
+
+  /* ---- Verdict level badges --------------------------------------------------------------- */
+
+  .level {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0 4px;
+    border-radius: 2px;
+    border: 1px solid var(--color-line);
+    color: var(--color-dim);
+  }
+
+  .level-err {
+    border-color: #63232c;
+    color: #ff8f9b;
+  }
+
+  .level-warn {
+    border-color: #5c451a;
+    color: #f2b756;
+  }
+
+  /* ---- Surfaces ---------------------------------------------------------------------------- */
+
+  .panel {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+  }
+
+  .panel-head {
+    background: var(--color-panel-2);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .kicker {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+
+  /* ---- The kill criterion ------------------------------------------------------------------ */
+
+  .verdict-pass {
+    background: #0c2a1f;
+    border: 1px solid #1d6a4a;
+    color: #5fd6a4;
+  }
+
+  /* A failed kill test is the loudest thing the console can render. ADR-001 says the number is
+     published either way, and a failure that has to be looked for is a failure being softened. */
+  .verdict-fail {
+    background: #3a1014;
+    border: 1px solid #8c2733;
+    color: #ff9aa5;
+  }
+
+  /* ---- Tables ------------------------------------------------------------------------------ */
+
+  .grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .grid-table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--color-line);
+    white-space: nowrap;
+  }
+
+  .grid-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--color-line-soft);
+    vertical-align: middle;
+  }
+
+  .grid-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The headline column. ADR-001 puts false negatives first because a tool that misses breakages
+     manufactures false confidence, and the table should say so without a caption. */
+  .col-headline {
+    background: #141a23;
+  }
+
+  .row-system td {
+    background: #121a22;
+  }
+
+  /* ---- Controls ---------------------------------------------------------------------------- */
+
+  .btn {
+    border: 1px solid var(--color-line);
+    background: var(--color-panel-2);
+    color: var(--color-muted);
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .btn[aria-pressed="true"],
+  .btn[data-active="true"] {
+    background: #1b2735;
+    border-color: #33506f;
+    color: var(--color-text);
+  }
+
+  .btn:disabled {
+    color: var(--color-dim);
+    cursor: default;
+  }
+
+  .nav-link {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  .nav-link[data-active="true"] {
+    background: var(--color-panel-2);
+    border-color: var(--color-line);
+    color: var(--color-text);
+  }
+
+  /* ---- Code -------------------------------------------------------------------------------- */
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+  }
+
+  .source {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.55;
+    white-space: pre;
+    overflow-x: auto;
+    tab-size: 2;
+    background: #0b0f15;
+    border: 1px solid var(--color-line);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #cbd5e3;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #161c25 0%, #1d242f 50%, #161c25 100%);
+    border-radius: 3px;
+  }
+}
