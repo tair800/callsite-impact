@@ -66,6 +66,37 @@ breakages across ≥3 vendors. **Observed 94 across 3. PASSED.**
 
 ---
 
+## What two read-only reviews found
+
+Both reviews were adversarial and read-only, and both found real defects. The three that change how
+a number should be read are in `DECISIONS.md` ADR-003 and on the README's front page; summarised:
+
+**The oracle-boundary guard was vacuous.** It banned imports of `callsite_impact.oracle` — a package
+that did not exist. A reviewer planted `import callsite_impact.pipeline` plus a read of
+`work/<pair>/labels.json` into the classifier and all sixteen tests stayed green. The boundary was
+never crossed in shipped code; the defect was in the guard, which is the worse place for it. Replaced
+with an allowlist of first-party imports plus a ban on the oracle's output filenames, and verified by
+planting the reviewer's own breach and watching both halves fail.
+
+**The kill criterion scales with an unregistered budget.** At the harness's own default generation
+budget the identical corpus yields **52** breakages, below the threshold of 60. The published 94 is
+at a budget fixed in `pipeline.py` that ADR-001 never pre-registered — and a comment there claimed
+it had. The accuracy rates are unaffected (F1 0.962 against 0.963). Both numbers are now published.
+
+**Two-thirds of the breakages ride on a sixth of the corpus** — the 238 call sites that pin a narrow
+type, at a 24% breakage rate against 3.2% for an inferred `const`.
+
+**The differ's self-reported version was wrong in the manifest.** `go install …@v1.29.1` produces a
+binary that reports `oasdiff version main`, because the version is injected at link time. The
+manifest recorded that, contradicting every instruction in the repository. Now read from the Go
+module stamp.
+
+**The README attributed a corpus-wide total to one upgrade** — "3,383 breaking changes" is the sum
+across 18 pairs; the largest single pair is 797 and the median about 130. Rewritten around a real
+single pair.
+
+---
+
 ## Known issues and findings
 
 **The abstention rate was 75.7% and the cause was a missing table, not the domain.** The prose-shape

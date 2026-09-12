@@ -1,10 +1,12 @@
 # callsite-impact
 
-**A vendor ships a new API version. Your spec differ says "3,383 breaking changes". The only
-question that matters is: *which of our call sites actually break?* A differ cannot answer it — it
-compares two documents and knows nothing about your code.**
+**A vendor ships a new API version. Your spec differ says "296 breaking changes". The only question
+that matters is: *which of our call sites actually break?* A differ cannot answer it — it compares
+two documents and knows nothing about your code.**
 
-This repository answers it, and then checks the answer against the TypeScript compiler.
+296 is a real number from this corpus: Adyen BalancePlatform v1 → v2. The compiler breaks **33** of
+the 133 call sites written against it. This repository predicts which 33, and is then graded against
+the compiler.
 
 **Live: <https://callsite-impact.vercel.app>** — the result, every spec pair, and the compiler's
 verdict beside this tool's on each call site. No sign-in, nothing to run.
@@ -13,7 +15,7 @@ verdict beside this tool's on each call site. No sign-in, nothing to run.
 
 ## The measured result
 
-18 revision pairs from **three vendors** — Adyen, Twilio and Xero, all MIT-licensed public
+Across the whole corpus: 18 revision pairs from **three vendors** — Adyen, Twilio and Xero, all MIT-licensed public
 OpenAPI specifications. **1,338** generated call sites that typecheck clean against revision A.
 The compiler breaks **94** of them against revision B. That is the answer key.
 
@@ -29,9 +31,15 @@ number a person has to work through by hand, and it is why "which operations cha
 useful answer to "what do I have to fix?"
 
 **False negatives lead the table** because a tool that misses breakages manufactures false
-confidence and is worse than no tool. Ours misses 3 of 94.
+confidence and is worse than no tool. Ours misses 3 of 94 — **all three on Xero**, the smallest and
+weakest vendor in the corpus, where recall is 0.833 against 1.000 for the other two.
 
-Regenerate with `make corpus && make killtest`. Every number above is written into
+**Seven of the 18 pairs broke nothing at all**, including one Twilio pair with 188 call sites. That
+is not a failure of the corpus — it is the same finding as the headline, at pair granularity: a
+release with real differ-reported changes can leave every call site standing.
+
+Regenerate with `make install && make corpus && make killtest` — the middle step needs `oasdiff`,
+see [Run it](#run-it). Every number above is written into
 [`artifacts/evaluation.json`](artifacts/evaluation.json) by the run that measured it, and CI
 re-measures on every push and fails if the committed artifact no longer matches.
 
@@ -83,7 +91,9 @@ vendor spec A + B ─── oasdiff ─→ typed change set ──────�
 `oasdiff` calls a decreased `maxLength` a breaking change, and it is one — but `maxLength` does not
 exist in the TypeScript type system. No call site can be made to fail on it, and **a clean compile
 there is not evidence of safety**. Reporting it as breakage is a false positive; reporting it as safe
-is worse. So it abstains, the abstention is counted, and the rate is published: **2.2%**.
+is worse. So it abstains, the abstention is counted, and the rate is published: **2.2% of
+(call site × change) pairs**, which is **5.5%** of call sites — 74 of 1,338 — once a call site that
+abstains on any change is counted as abstaining.
 
 The scorer reports two views and the README shows both. **Strict** counts UNKNOWN as a miss;
 **abstaining** excludes it and reports it separately. On this corpus they are identical to three
@@ -92,6 +102,22 @@ decimal places, because almost nothing abstains.
 ---
 
 ## What the numbers do not say
+
+- **The kill criterion is an absolute count, so it scales with how much code the generator writes.**
+  `MAX_OPERATIONS` and `CALLSITES_PER_OPERATION` are fixed in `pipeline.py` and have never been
+  changed, but ADR-001 does not pre-register them. A review re-ran the identical corpus at the
+  harness's own defaults and got **52** breakages — below the threshold. The *rates* barely moved
+  (F1 0.962 against 0.963), because rates do not scale; only the count does.
+  [ADR-003](DECISIONS.md) has the table.
+- **Two-thirds of the breakages come from a sixth of the corpus.** 238 call sites that pin a narrow
+  type — an annotated `const`, or an exhaustive `switch` — carry 59 of the 94 breakages, at a 24%
+  breakage rate against 3.2% for an inferred `const`. Both are patterns real clients write, and the
+  binding axis is pre-registered; the *proportion* is not.
+- **There is no held-out set.** The rule table rules on exactly the 24 change ids this corpus emits,
+  so "0 unclassified" is tautological. And eight of those rules were written *after* seeing a score
+  — a real bug fix, disclosed below, but it makes 3.2% a post-selection number. Reserving a vendor
+  the rules have never seen is the right fix and it is not done.
+
 
 - **Compilation proves a type-level incompatibility. It does not prove production breakage.** A
   `maxLength` that shrank will reject your requests at runtime with a clean build.
@@ -129,12 +155,18 @@ abstaining toggle because showing one view alone would be a choice about which n
 
 ![The measured result](docs/screenshots/result.png)
 
-**Three verdicts side by side** — `CMP` is the compiler (ground truth), `SYS` is this tool, `BASE` is
-the naive baseline. The interesting rows are the disagreements, and the console filters to them.
-Every row on this screen where `CMP CLEAN` sits next to `BASE IMPACTED` is a call site a team would
-have opened, read, and closed again having changed nothing.
+**Three verdicts side by side** — `CMP` is the compiler (ground truth), `SYS` is this tool, `BASE`
+is the naive baseline. This is an unfiltered slice of the table; the console has a filter for the
+rows where they disagree. Every row here with `CMP CLEAN` beside `BASE IMPACTED` is a call site a
+team would have opened, read, and closed again having changed nothing.
 
 ![Compiler, system and baseline on the same call sites](docs/screenshots/verdicts.png)
+
+**One spec pair** — 296 changes reported, 133 call sites admitted, 33 broken. The
+`not type-expressible` chips are on the `maxLength` and `minLength` rows, which is what UNKNOWN
+looks like in practice rather than in the abstract.
+
+![One spec pair end to end](docs/screenshots/pair.png)
 
 **Provenance** — every specification with the SHA-256 of the bytes the run actually read, so a
 reader can fetch the same file and check.

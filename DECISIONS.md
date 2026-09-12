@@ -180,3 +180,94 @@ has two. This is recorded in `portfolio-control/PORTFOLIO_PROGRESS.md` as an ope
 project 3, not silently absorbed.
 
 Nothing in this repository claims semantic retrieval, hybrid search, reranking or a vector index.
+
+---
+
+## ADR-003 — What two read-only reviews found, and what it does to the claim
+
+**Status:** accepted, 2026-09-12, **after the first measured result**.
+
+Two independent reviews were run against the measured repository. Both found real defects. This
+record exists because three of them change how a number should be read, and a finding that changes
+how a number should be read has to sit next to the number.
+
+### The kill criterion is an absolute count, so it scales with a budget nobody pre-registered
+
+`pipeline.py` fixes three constants: `MAX_OPERATIONS = 120`, `CALLSITES_PER_OPERATION = 4`,
+`SEED = 20260912`. **ADR-001 does not pre-register any of them.** It pre-registers the *axes* the
+generator may vary, not how much to generate. A comment in `pipeline.py` claimed otherwise; that
+comment was wrong and has been corrected.
+
+A reviewer re-ran the identical corpus, identical seed and identical specifications at the harness's
+own defaults:
+
+| Budget | Admitted call sites | Compiler breakages | Kill criterion |
+|---|---|---|---|
+| 120 × 4 — published | 1,338 | **94** | PASSED |
+| 40 × 3 — `gen-callsites.mjs` defaults | 854 | **52** | **FAILED** |
+
+**What this does not mean.** The accuracy figures are rates and barely moved: F1 0.962 at the
+smaller budget against 0.963 published, precision 0.962 against 0.958. The classifier result is not
+a function of the budget.
+
+**What it does mean.** *"94 breakages, PASSED"* is a statement about a corpus of a particular size.
+The blueprint's criterion — *"fewer than 60 compiler-verified call-site breakage labels across at
+least three vendors"* — is best read as a feasibility test: can a corpus of this kind be built at
+all, from public specifications, with labels a compiler emits? It can, and 94 is the evidence. But
+the threshold is not scale-free, the budget was chosen before any result existed and has not been
+changed since, and a reader is entitled to know that a third of the budget would not have cleared
+it. Both numbers are published rather than the flattering one.
+
+The budget was **not** raised in response to a result. It has had one value since the first full
+run. That is checkable in `git log`.
+
+### The oracle-boundary guard was vacuous, and a reviewer proved it
+
+The guard banned imports of `callsite_impact.oracle` — **a package that did not exist**. A reviewer
+planted `import callsite_impact.pipeline` plus a read of `work/<pair>/labels.json` into
+`classify/rules.py`, giving the classifier the compiler's raw diagnostics, and all sixteen tests
+stayed green.
+
+The boundary was never actually crossed in shipped code — every import under `classify/` was checked
+and resolves to `domain`, `specdiff` or the standard library. The defect was in the guard, which is
+the worse place for it: a guard nobody can fail is a guard everybody trusts.
+
+Replaced with an **allowlist** of first-party imports plus a ban on the oracle's output filenames,
+and both halves were verified by planting the reviewer's own breach and watching them fail.
+A ban list only stops the routes somebody thought of.
+
+### Two-thirds of the breakages ride on two bindings that are a sixth of the corpus
+
+| Binding | Call sites | Broken | Rate |
+|---|---|---|---|
+| inferred `const` | 1,100 | 35 | 3.2% |
+| `const pinned: "a" \| "b" = res.x` | 132 | 31 | **23.5%** |
+| exhaustive `switch` with a `never` default | 106 | 28 | **26.4%** |
+
+238 call sites — 17.8% of the corpus — carry 59 of the 94 breakages. ADR-001 pre-registers the
+binding axis and says plainly that it is what decides whether a widening change can reach a call
+site at all; what it does not pre-register is the probability of drawing each one. Both are patterns
+real TypeScript clients use, and neither was tuned after a result. But the headline is materially a
+statement about that mix, and it is now disclosed rather than left for a reader to discover.
+
+### There is no held-out set
+
+The expressibility table rules on exactly the 24 change ids this corpus emits, so
+`unclassified_changes: 0` is tautological and carries no information about generalisation. Worse for
+the headline: eight prose patterns were added **after** seeing a score, moving false negatives from
+5.3% to 3.2%. That was a genuine bug fix and it is disclosed on the front page — but 3.2% is a
+post-selection number on the corpus the rules were fitted to.
+
+Closing this properly means reserving a vendor the rules have never seen and reporting it
+separately. It is **not done**, it is the largest open weakness in the measurement, and it is
+recorded here rather than left implicit.
+
+### Smaller corrections
+
+- The differ's `--version` reports `oasdiff version main` for a binary installed from tag `v1.29.1`,
+  because the version is injected at link time. The manifest recorded that string, contradicting
+  every instruction in the repository. Now read from the Go module stamp, which cannot drift.
+- Compiler diagnostics were attributed to call sites by line number without checking the filename.
+  Harmless today — the oracle typechecks one file — and silently wrong the day it is not.
+- `README.md` opened by attributing the corpus-wide total of 3,383 changes to a single vendor
+  upgrade. The largest single pair is 797 and the median is about 130.

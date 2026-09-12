@@ -51,9 +51,20 @@ __all__ = ["CorpusRun", "PairResult", "run_corpus", "run_pair"]
 HARNESS = Path(__file__).resolve().parents[2] / "harness"
 _MARKER = re.compile(r"^// @callsite id=(cs_[0-9a-f]{12}) ")
 
-#: Generation parameters. Fixed here rather than passed in, because ADR-001 pre-registers the
-#: generator's policy and a knob that can be turned per run is a policy that can be turned per
-#: result. Changing these changes the corpus, and the corpus is what the claim rests on.
+#: Generation budget. Fixed here rather than passed in, so that one committed number decides the
+#: corpus rather than a flag somebody sets per run.
+#:
+#: **These three are NOT pre-registered, and an earlier version of this comment claimed they were.**
+#: ADR-001 pre-registers the *axes* the generator may vary -- which operations, which properties,
+#: how a read is bound and navigated. It says nothing about how many operations to draw, how many
+#: call sites to write per operation, or which seed.
+#:
+#: That matters because the kill criterion is an absolute count, so it scales with this budget. A
+#: review re-ran the identical corpus at the harness's own defaults (40 x 3) and got 854 admitted
+#: call sites and **52** breakages -- below the threshold of 60. At 120 x 4 it is 94. The accuracy
+#: figures barely moved (F1 0.962 against 0.963), because those are rates; only the count moved.
+#: DECISIONS.md ADR-003 records what that does and does not mean for the claim.
+MAX_OPERATIONS_NOTE = "see ADR-003: the budget is not pre-registered and the kill count scales"
 MAX_OPERATIONS = 120
 CALLSITES_PER_OPERATION = 4
 SEED = 20260912
@@ -250,6 +261,12 @@ def run_pair(pair: SpecPair, workdir: Path) -> PairResult:
 
     labels: list[CompilerLabel] = []
     for error in raw_labels:
+        # The marker index is built from one file, so a diagnostic in any other file cannot be
+        # attributed by line number -- doing so would silently pin someone else's error to a call
+        # site here. Today the oracle only ever typechecks `callsites.ts`, so this never fires; it
+        # exists because the day it does, the failure would otherwise be invisible and wrong.
+        if Path(str(error["file"])).name != "callsites.ts":
+            continue
         owner = _owner_of_line(index, int(error["line"]))
         if owner is None or owner not in known:
             # A diagnostic that lands outside every call-site block is a harness fault, not a label.

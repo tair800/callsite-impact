@@ -99,19 +99,32 @@ def _go_bin_candidates() -> list[Path]:
     return [root / name for root in roots for name in ("oasdiff.exe", "oasdiff")]
 
 
-def oasdiff_version() -> str:
-    """The differ's self-reported version string, recorded in the corpus manifest.
+_GO_MODULE_LINE: Final = re.compile(r"^\s+mod\s+github\.com/oasdiff/oasdiff\s+(\S+)", re.MULTILINE)
 
-    Kept verbatim rather than parsed into a version tuple: a change id set is a property of the
-    exact build that produced it, and a manifest that rounded the version off would not let a reader
-    reproduce the ids.
+
+def oasdiff_version() -> str:
+    """The differ's version, recorded in the corpus manifest and used as the diff cache key.
+
+    **The binary's own ``--version`` is not trustworthy here, and a review caught it.** A binary
+    installed with ``go install github.com/oasdiff/oasdiff@v1.29.1`` reports ``oasdiff version
+    main``, because the version is injected at link time and ``go install`` of a tag does not inject
+    it. Recording that string put ``"oasdiff version main"`` in the manifest of a corpus produced by
+    the pinned tag -- provenance that contradicted every instruction in the repository and was wrong
+    about the one tool the whole classification layer is fitted to.
+
+    The module version is stamped into the binary by the Go toolchain and cannot drift from it, so
+    it is read first. The self-report is the fallback, for a binary obtained some other way.
 
     Returns:
-        The binary's `--version` output, stripped. A build made from source reports a branch name
-        (``oasdiff version main``) rather than a tag, and that is recorded as-is.
+        ``oasdiff v1.29.1`` where the module version is readable, else the ``--version`` output.
     """
-    completed = _run([str(find_oasdiff()), "--version"], timeout_s=60)
-    return completed.stdout.strip()
+    binary = find_oasdiff()
+    if shutil.which("go"):
+        stamped = _run(["go", "version", "-m", str(binary)], timeout_s=60)
+        match = _GO_MODULE_LINE.search(stamped.stdout)
+        if match:
+            return f"oasdiff {match.group(1)}"
+    return _run([str(binary), "--version"], timeout_s=60).stdout.strip()
 
 
 def _run(argv: list[str], *, timeout_s: int) -> subprocess.CompletedProcess[str]:

@@ -36,7 +36,30 @@ SOURCE_ROOT = ROOT / "src"
 CLASSIFY_PACKAGE = SOURCE_ROOT / "callsite_impact" / "classify"
 EXTRACT_FACTS = ROOT / "harness" / "scripts" / "extract-facts.mjs"
 
-ORACLE_MODULE = "callsite_impact.oracle"
+#: The classification package may import these first-party modules and nothing else.
+#:
+#: An allowlist, not a ban list, and the difference is the finding that produced it. The first
+#: version of this guard banned ``callsite_impact.oracle`` -- a package that **did not exist**, so
+#: it forbade nothing. A review proved it by planting ``import callsite_impact.pipeline`` plus a
+#: read of ``work/<pair>/labels.json``, giving the classifier the compiler's raw diagnostics with
+#: all sixteen tests green. A ban list only stops the routes somebody thought of.
+#:
+#: ``pipeline`` is the module that builds the answer key, and it is the one a shortcut reaches for.
+#: It is absent from this list deliberately, not by oversight.
+#:
+#: The bare package name is deliberately absent too: ``callsite_impact`` here would make every
+#: prefix match succeed and re-admit the whole repository.
+ALLOWED_FIRST_PARTY_IMPORTS = frozenset(
+    {
+        "callsite_impact.domain",
+        "callsite_impact.classify",
+        "callsite_impact.specdiff",
+    }
+)
+
+#: Filenames the oracle writes. A classifier that opens one is reading the answer key whatever it
+#: imported to get there, so the guard looks for the strings as well as for the imports.
+ORACLE_ARTEFACTS = ("labels.json", "admission.json")
 GROUND_TRUTH_TYPE = "CompilerLabel"
 DYNAMIC_IMPORT_CALLS = frozenset({"__import__", "import_module"})
 
@@ -135,9 +158,23 @@ def _names_ground_truth_type(tree: ast.AST) -> bool:
     return False
 
 
-def _reaches_oracle(name: str) -> bool:
-    """Exact module match or a submodule of it. ``callsite_impact.oracles`` is not a match."""
-    return name == ORACLE_MODULE or name.startswith(f"{ORACLE_MODULE}.")
+def _forbidden_first_party(name: str) -> bool:
+    """True for a first-party import the classification package is not allowed to make.
+
+    Third-party and standard-library imports are none of this guard's business: only modules inside
+    this repository can carry compiler output. Anything under ``callsite_impact`` that is not on the
+    allowlist is a breach, so a **new** module is forbidden by default rather than permitted until
+    somebody remembers to ban it.
+
+    Prefix matching is what lets ``from callsite_impact.domain import SpecChange`` through: that
+    form yields both the module and ``callsite_impact.domain.SpecChange``, and the second is a
+    symbol whose module is allowed.
+    """
+    if not (name == "callsite_impact" or name.startswith("callsite_impact.")):
+        return False
+    return not any(
+        name == allowed or name.startswith(f"{allowed}.") for allowed in ALLOWED_FIRST_PARTY_IMPORTS
+    )
 
 
 def _strip_js_comments(source: str) -> str:
@@ -202,16 +239,41 @@ def _type_checker_calls(source: str) -> list[str]:
 # ------------------------------------------------------------------------------------- the guards
 
 
-def test_classify_package_never_imports_the_oracle() -> None:
-    """The system under test must not be able to read the answer key it is graded against."""
+def test_classify_package_imports_only_what_it_is_allowed_to() -> None:
+    """The system under test must not be able to reach the answer key it is graded against."""
     offenders: list[str] = []
     for module_path in _classify_modules():
         tree = ast.parse(module_path.read_text(encoding="utf-8"))
         package = _package_of(module_path)
         for name in _import_targets(tree, package) + _dynamic_import_arguments(tree):
-            if _reaches_oracle(name):
+            if _forbidden_first_party(name):
                 offenders.append(f"{module_path.relative_to(ROOT)} imports {name}")
-    assert not offenders, "the classification package imported the oracle: " + "; ".join(offenders)
+    assert not offenders, (
+        "the classification package imported a first-party module outside its allowlist: "
+        + "; ".join(offenders)
+        + ". If the import is legitimate, add it to ALLOWED_FIRST_PARTY_IMPORTS and say why."
+    )
+
+
+def test_classify_package_never_opens_an_oracle_artefact() -> None:
+    """Imports are not the only route to the answer key; the files it writes are banned by name.
+
+    The breach a review planted imported nothing suspicious at module level -- it read
+    ``work/<pair>/labels.json`` off disk. An import guard cannot see that.
+    """
+    offenders: list[str] = []
+    for module_path in _classify_modules():
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                offenders.extend(
+                    f"{module_path.relative_to(ROOT)} names {artefact!r}"
+                    for artefact in ORACLE_ARTEFACTS
+                    if artefact in node.value
+                )
+    assert not offenders, "the classification package referenced an oracle artefact: " + "; ".join(
+        offenders
+    )
 
 
 def test_classify_package_never_names_the_compiler_label() -> None:
@@ -256,23 +318,27 @@ def test_python_guard_fires_on_a_planted_import(source: str) -> None:
     """Every spelling of the same breach, including the relative and dynamic ones."""
     tree = ast.parse(source)
     names = _import_targets(tree, "callsite_impact.classify") + _dynamic_import_arguments(tree)
-    assert any(_reaches_oracle(name) for name in names), source
+    assert any(_forbidden_first_party(name) for name in names), source
 
 
 @pytest.mark.parametrize(
     "source",
     [
-        '"""This module must never import callsite_impact.oracle."""',
+        '"""This module must never import callsite_impact.pipeline."""',
         "from callsite_impact.domain import SpecChange",
         "import callsite_impact.specdiff.expressibility",
-        "ORACLE_NOTE = 'callsite_impact.oracle is off limits'",
+        "from callsite_impact.specdiff.expressibility import expressibility_of",
+        "PIPELINE_NOTE = 'callsite_impact.pipeline is off limits'",
+        "import re",
+        "from collections.abc import Sequence",
+        "import pydantic",
     ],
 )
 def test_python_guard_stays_quiet_on_an_innocent_mention(source: str) -> None:
     """Prose about the rule is not a breach of it, and a guard that says otherwise gets ignored."""
     tree = ast.parse(source)
     names = _import_targets(tree, "callsite_impact.classify") + _dynamic_import_arguments(tree)
-    assert not any(_reaches_oracle(name) for name in names), source
+    assert not any(_forbidden_first_party(name) for name in names), source
 
 
 def test_compiler_label_guard_distinguishes_prose_from_code() -> None:
