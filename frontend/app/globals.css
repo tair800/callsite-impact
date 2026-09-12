@@ -227,6 +227,13 @@
     border-bottom: none;
   }
 
+  /* `nowrap` is right for a column heading and wrong for a row heading that carries a sentence.
+     Without this the predictor's description cannot wrap, so it overflows its cell and paints
+     across the FN RATE figure -- the one number the table is built around. */
+  .grid-table tbody th {
+    white-space: normal;
+  }
+
   .num {
     text-align: right;
     font-variant-numeric: tabular-nums;

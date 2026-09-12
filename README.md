@@ -173,9 +173,8 @@ reader can fetch the same file and check.
 
 ![Provenance for every specification](docs/screenshots/provenance.png)
 
-Screenshots taken from the console rendering `artifacts/evaluation.json` and
-`artifacts/findings.json` — the same files CI re-measures and the same files the deployed site
-serves.
+All four screenshots are taken from the **deployed** site above, not a local run — the same
+`artifacts/evaluation.json` and `artifacts/findings.json` that CI re-measures on every push.
 
 ---
 
