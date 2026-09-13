@@ -218,8 +218,13 @@ the threshold is not scale-free, the budget was chosen before any result existed
 changed since, and a reader is entitled to know that a third of the budget would not have cleared
 it. Both numbers are published rather than the flattering one.
 
-The budget was **not** raised in response to a result. It has had one value since the first full
-run. That is checkable in `git log`.
+> **Superseded by ADR-004.** This paragraph originally read *"The budget was not raised in response
+> to a result. It has had one value since the first full run. That is checkable in `git log`."*
+> It is not checkable in `git log`. The history shows the budget never changed after the first
+> **committed** score — but that same commit introduced the first committed artifact, so it cannot
+> separate *chosen before the first score* from *chosen while the first score was visible*. The
+> weaker, true statement is in ADR-004; the original is left visible here rather than edited away,
+> because a record that quietly rewrites its own overclaims is worth less than one that shows them.
 
 ### The oracle-boundary guard was vacuous, and a reviewer proved it
 
