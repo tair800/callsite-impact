@@ -271,3 +271,59 @@ recorded here rather than left implicit.
   Harmless today — the oracle typechecks one file — and silently wrong the day it is not.
 - `README.md` opened by attributing the corpus-wide total of 3,383 changes to a single vendor
   upgrade. The largest single pair is 797 and the median is about 130.
+
+---
+
+## ADR-004 — A confirmatory slice, and what the budget evidence actually supports
+
+**Status:** accepted, 2026-09-13, **before the slice was measured**.
+
+ADR-003 left two things open. This record closes one of them with evidence, closes the other with a
+measurement, and is committed **before either result exists** so the order is checkable.
+
+### What the history proves about the generation budget, stated exactly
+
+| Question | Answer from `git log` |
+|---|---|
+| When was the canonical budget introduced? | `0242344`, the commit that introduced `pipeline.py` |
+| Has it ever changed? | **No.** Two commits have touched `pipeline.py`; the second changed a comment. `MAX_OPERATIONS = 120`, `CALLSITES_PER_OPERATION = 4`, `SEED = 20260912` are the only values the file has ever held. |
+| Was it fixed before the first score was *observed*? | **The repository does not prove this.** `0242344` also introduced `artifacts/evaluation.json` — the first committed measurement. Both landed together. |
+| Does ADR-001 pre-register it? | **No.** Grepping the pre-registration commit `d3587d9` for a budget returns nothing. |
+| Harness default | `40 × 3`, in `gen-callsites.mjs`, unchanged since its first commit |
+
+**So the honest claim is narrower than "pre-registered", and narrower than what ADR-003 said.**
+ADR-003 stated *"the budget was not raised in response to a result … that is checkable in git log"*.
+What `git log` actually shows is that the budget never changed **after the first committed score**.
+The first full run happened in a working tree before that commit, so the history cannot separate
+"chosen before the first score" from "chosen while the first score was visible". That correction is
+made here rather than left standing.
+
+The word **pre-registered** is therefore not used of the budget anywhere. It is used only of what
+ADR-001 actually fixed before implementation: the claim, the oracle, the three verdicts, the kill
+threshold, the two baselines and the metric list.
+
+### The kill criterion is unchanged, and its sensitivity is published
+
+The criterion stays exactly as the blueprint set it: **≥60 compiler-verified call-site breakage
+labels across ≥3 vendors.** It is not lowered, rewritten or reinterpreted.
+
+It is an **absolute count**, so it scales with how much code the generator writes. The canonical
+release corpus and the harness default are both measured and both published, so a reader can see
+which claims scale with corpus volume and which do not. The sweep lives in
+`artifacts/budget_sweep.json`, written by `scripts/budget_sweep.py`.
+
+### The confirmatory slice
+
+`corpus/holdout.py` names fifteen spec pairs — six Adyen services, six Twilio products, three Xero
+APIs — **none of them in the development corpus**, chosen by service name before any of their
+content was inspected. It is a **data** hold-out, not a vendor hold-out: it tests whether the rule
+logic generalises to call sites and changes nobody tuned against, and it does not independently test
+the expressibility table, because the same three vendors will largely produce ids already ruled on.
+An unruled id abstains, which costs the strict score rather than hiding in it.
+
+**The commitment, made here before the number exists: whatever it scores is published, and no rule,
+pattern or table is changed afterwards.** If the slice scores worse than the development corpus,
+that gap is the finding.
+
+A pair is excluded **only** if the toolchain cannot process it, never because of its result, and
+every exclusion is counted and published.
