@@ -2,13 +2,39 @@
 
 Resume point for every session. Read after `CLAUDE.md`, then `git status` and recent commits.
 
-**Current status: the claim is measured and the predeclared kill criterion passed.** ADR-001 was
-committed before any implementation; the corpus, the oracle, the classifier and both baselines now
-run end to end, and CI re-measures on every push.
+**Current status: FULLY COMPLETE AND FROZEN.** The predeclared kill criterion passed on the
+canonical release corpus. A confirmatory slice was frozen in git, measured once, and **the system
+did badly on it** — that number is published rather than tuned away, and it is the honest estimate of
+how well this generalises.
 
 ---
 
-## The measurement
+## Generalisation — the number that matters
+
+| | Development corpus | **Held-out slice** |
+|---|---|---|
+| Pairs / vendors | 18 / 3 | 15 / 3 |
+| Admitted call sites | 1,338 | 1,342 |
+| Compiler-verified breakages | 94 | 265 |
+| Precision | 0.958 | **1.000** |
+| Recall | 0.968 | **0.196** |
+| **F1** | 0.963 | **0.328** |
+
+Frozen at `9378d58` **before** `artifacts/holdout.json` existed; scored once; no rule, pattern or
+table changed afterwards. Per vendor: Adyen 31 of 31 caught (F1 1.000), Twilio 17 of 41 (0.586),
+Xero 4 of 193 (0.041).
+
+**Why it fails.** 39% of misses are on operations the differ reported no change for at all —
+`/Employees/{EmployeeId}/…` became `/Employees/{EmployeeID}/…`, which `oasdiff` normalises away and
+`openapi-typescript` does not, so every call site is TS2339 while the differ is silent. 30 of the 44
+vanished path keys across the slice are renames like that. The tool's recall is capped by the
+differ's recall, and the gap is silent: no reported change means no candidate pair, so the verdict is
+UNAFFECTED rather than UNKNOWN. **Not fixed** — fixing it against the slice that revealed it would
+destroy the only unbiased number here. ADR-005.
+
+---
+
+## The measurement — development corpus
 
 | Predictor | False negatives | False positives | Precision | Recall | F1 |
 |---|---|---|---|---|---|
@@ -16,11 +42,23 @@ run end to end, and CI re-measures on every push.
 | Baseline — every call site on a changed operation | 0.0% | 64.4% | 0.105 | 1.000 | 0.190 |
 | Baseline — the same, ERR-level changes only | 19.1% | 58.2% | 0.095 | 0.809 | 0.170 |
 
-Strict view, pooled. Abstention 2.2%. Written by the run that measured it into
-`artifacts/evaluation.json`; never hand-typed.
+Strict view, pooled, **on the corpus the rules were fitted to**. Abstention 2.2%. Written by the run
+that measured it into `artifacts/evaluation.json`; never hand-typed.
 
 **Kill criterion — declared in ADR-001 before implementation:** ≥60 compiler-verified call-site
-breakages across ≥3 vendors. **Observed 94 across 3. PASSED.**
+breakages across ≥3 vendors. **Canonical release corpus: 94 across 3. PASSED.**
+
+**The count is generation-budget dependent and the sensitivity is published** (`make sweep`):
+
+| Budget | Admitted | Breakages | Kill | P | R | F1 |
+|---|---|---|---|---|---|---|
+| 40 × 3 — harness default | 854 | 52 | **FAIL** | 0.962 | 0.962 | 0.962 |
+| **120 × 4 — canonical** | 1,338 | **94** | **PASS** | 0.958 | 0.968 | 0.963 |
+| 200 × 6 — larger | 1,931 | 142 | **PASS** | 0.958 | 0.965 | 0.961 |
+
+The count scales; the rates do not. `git log` shows the budget never changed after the first
+committed score — it cannot show it was chosen before that score was first *observed*, because both
+landed in one commit, so **"pre-registered" is not used of the budget anywhere**. ADR-004.
 
 | Corpus | |
 |---|---|

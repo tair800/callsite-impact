@@ -1,12 +1,13 @@
 import Link from "next/link";
 
 import { CorpusStrip } from "@/components/CorpusStrip";
+import { GeneralisationPanel } from "@/components/GeneralisationPanel";
 import { KillCriterionPanel } from "@/components/KillCriterionPanel";
 import { MetricsComparison } from "@/components/MetricsComparison";
 import { LoadFailureNotice } from "@/components/states";
 import { WhatThisProves } from "@/components/WhatThisProves";
 import { ratePercent } from "@/lib/format";
-import { loadSummary } from "@/lib/source";
+import { loadHoldout, loadSummary } from "@/lib/source";
 
 /**
  * The result, in the order ADR-001 puts it: the kill criterion, then the comparison, then the
@@ -19,7 +20,7 @@ import { loadSummary } from "@/lib/source";
 export const dynamic = "force-dynamic";
 
 export default async function ResultPage(): Promise<React.ReactElement> {
-  const summary = await loadSummary();
+  const [summary, holdout] = await Promise.all([loadSummary(), loadHoldout()]);
 
   if (!summary.ok) {
     return (
@@ -38,9 +39,11 @@ export default async function ResultPage(): Promise<React.ReactElement> {
 
       <KillCriterionPanel criterion={data.kill_criterion} />
 
+      <GeneralisationPanel development={data} holdout={holdout} />
+
       <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 px-1">
         <span className="text-[12.5px] text-[var(--color-muted)]">
-          Headline false-negative rate (strict, pooled):{" "}
+          Development-corpus false-negative rate (strict, pooled):{" "}
           <strong className="mono text-[14px] font-bold text-[var(--color-text)]">
             {ratePercent(data.headline_false_negative_rate)}
           </strong>

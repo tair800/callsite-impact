@@ -13,11 +13,70 @@ verdict beside this tool's on each call site. No sign-in, nothing to run.
 
 ---
 
-## The measured result
+## Two numbers, and the second one is the honest one
 
-Across the whole corpus: 18 revision pairs from **three vendors** — Adyen, Twilio and Xero, all MIT-licensed public
-OpenAPI specifications. **1,338** generated call sites that typecheck clean against revision A.
-The compiler breaks **94** of them against revision B. That is the answer key.
+The rule table was fitted to one corpus. Eight of its patterns were written *after* seeing a score on
+that corpus. So the repository built a second, disjoint slice — fifteen spec pairs from services the
+rules had never seen — **froze it in git before measuring it** ([`9378d58`](DECISIONS.md)), scored it
+once, and changed nothing afterwards.
+
+| | Development corpus | **Held-out slice** |
+|---|---|---|
+| Pairs / vendors | 18 / 3 | 15 / 3 |
+| Admitted call sites | 1,338 | 1,342 |
+| Compiler-verified breakages | **94** | **265** |
+| Precision | 0.958 | **1.000** |
+| Recall | 0.968 | **0.196** |
+| **F1** | 0.963 | **0.328** |
+
+**Development F1 0.963 is a development number. The unbiased estimate is 0.328.** On unseen services
+the system misses four breakages in five.
+
+It is never *wrong* when it speaks — precision 1.000, **zero** false positives across 1,077 clean
+call sites. The failure is entirely silence. And it is not uniform: on Adyen services the rules had
+never seen it caught **31 of 31**; on two Xero payroll pairs it caught 4 of 193.
+
+### Why it fails, traced to one character
+
+39% of the misses are on operations the differ reported **no change for at all**:
+
+```
+revision A   /Employees/{EmployeeId}/LeaveBalances
+revision B   /Employees/{EmployeeID}/LeaveBalances
+```
+
+`oasdiff` normalises path-parameter names and reports nothing — correctly, by its own semantics: it
+is the same endpoint. `openapi-typescript` keys `paths` on the literal string, so every call site on
+it is `TS2339`. **30 of the 44 path keys that vanish across the slice are renames like this one.**
+
+**The tool's recall is capped by the differ's recall**, and worse, the gap is silent: no reported
+change means no candidate pair, so the call site comes out **UNAFFECTED** rather than UNKNOWN.
+[ADR-005](DECISIONS.md) has the full diagnosis. It is **not fixed** — fixing it against the slice
+that revealed it would turn the only unbiased number here into a second development number.
+
+---
+
+## The canonical release corpus
+
+**94 compiler-verified broken call sites across 3 vendors in the canonical release corpus.** 18
+revision pairs from Adyen, Twilio and Xero, all MIT-licensed public OpenAPI specifications; 1,338
+generated call sites that typecheck clean against revision A.
+
+**The absolute count depends on the fixed generation budget** — it is a count, so it scales with how
+much client code the generator writes. The rates do not. Both are measured, not asserted:
+
+| Budget | Admitted call sites | Compiler breakages | Vendors | Kill criterion | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|---|
+| 40 × 3 — harness default | 854 | 52 | 3 | **FAIL** | 0.962 | 0.962 | 0.962 |
+| **120 × 4** — canonical release | 1,338 | **94** | 3 | **PASS** | 0.958 | 0.968 | 0.963 |
+| 200 × 6 — larger | 1,931 | 142 | 3 | **PASS** | 0.958 | 0.965 | 0.961 |
+
+**The count scales almost linearly with corpus size; F1 moves by 0.002 across a 2.3× range.**
+That is the whole point of running it: the kill criterion is sensitive to the budget and the
+predictive metrics are not. Reproduce with `make sweep`;
+[`artifacts/budget_sweep.json`](artifacts/budget_sweep.json) is written by the run.
+
+Against the two baselines predeclared in ADR-001, on the development corpus:
 
 | Predictor | **False negatives** | False positives | Precision | Recall | F1 |
 |---|---|---|---|---|---|
@@ -27,29 +86,30 @@ The compiler breaks **94** of them against revision B. That is the answer key.
 
 **Read the naive baseline carefully, because it is not bad at finding breakage — it finds all of
 it.** It flags **895** call sites to catch the 94 that break. 801 of those are fine. That is the
-number a person has to work through by hand, and it is why "which operations changed?" is not a
-useful answer to "what do I have to fix?"
+number a person works through by hand, and it is why "which operations changed?" is not a useful
+answer to "what do I have to fix?"
 
-**False negatives lead the table** because a tool that misses breakages manufactures false
-confidence and is worse than no tool. Ours misses 3 of 94 — **all three on Xero**, the smallest and
-weakest vendor in the corpus, where recall is 0.833 against 1.000 for the other two.
-
-**Seven of the 18 pairs broke nothing at all**, including one Twilio pair with 188 call sites. That
-is not a failure of the corpus — it is the same finding as the headline, at pair granularity: a
-release with real differ-reported changes can leave every call site standing.
+**Seven of the 18 pairs broke nothing at all**, including one Twilio pair with 188 call sites.
 
 Regenerate with `make install && make corpus && make killtest` — the middle step needs `oasdiff`,
-see [Run it](#run-it). Every number above is written into
+see [Run it](#run-it). Every number is written into
 [`artifacts/evaluation.json`](artifacts/evaluation.json) by the run that measured it, and CI
 re-measures on every push and fails if the committed artifact no longer matches.
 
-### The kill criterion, declared before implementation
+### The kill criterion
 
-[`DECISIONS.md`](DECISIONS.md) ADR-001 was committed **before a line of the pipeline existed**
-(`git log` shows the order) and fixed the threshold at **60 compiler-verified call-site breakages
-across at least three vendors**.
+[`DECISIONS.md`](DECISIONS.md) ADR-001 was committed **before a line of the pipeline existed** and
+fixed the threshold at **≥60 compiler-verified call-site breakages across ≥3 vendors**. It has not
+been lowered, rewritten or reinterpreted.
 
-> **Observed: 94 breakages, 3 vendors. PASSED.**
+> **Canonical release corpus: 94 breakages across 3 vendors. PASSED.**
+>
+> At the harness default budget the same corpus yields **52 — which would FAIL.** The threshold is an
+> absolute count, so it is corpus-budget dependent. Published side by side rather than picked.
+
+**This is a feasibility result, not a generalisation result.** It says a corpus of compiler-verified
+labels can be built at all from public specifications. It says nothing about how well the predictor
+generalises — that is the 0.328 above.
 
 ---
 
@@ -103,20 +163,23 @@ decimal places, because almost nothing abstains.
 
 ## What the numbers do not say
 
-- **The kill criterion is an absolute count, so it scales with how much code the generator writes.**
-  `MAX_OPERATIONS` and `CALLSITES_PER_OPERATION` are fixed in `pipeline.py` and have never been
-  changed, but ADR-001 does not pre-register them. A review re-ran the identical corpus at the
-  harness's own defaults and got **52** breakages — below the threshold. The *rates* barely moved
-  (F1 0.962 against 0.963), because rates do not scale; only the count does.
-  [ADR-003](DECISIONS.md) has the table.
+- **The kill criterion is an absolute count, so it scales with the generation budget.**
+  `MAX_OPERATIONS` and `CALLSITES_PER_OPERATION` are fixed in `pipeline.py` and have never held any
+  other value — but **ADR-001 does not pre-register them, and the word "pre-registered" is not used
+  of them anywhere.** `git log` proves the budget never changed *after the first committed score*; it
+  cannot prove it was chosen before that score was first *observed*, because both landed in one
+  commit. See the sweep above and [ADR-004](DECISIONS.md).
 - **Two-thirds of the breakages come from a sixth of the corpus.** 238 call sites that pin a narrow
   type — an annotated `const`, or an exhaustive `switch` — carry 59 of the 94 breakages, at a 24%
   breakage rate against 3.2% for an inferred `const`. Both are patterns real clients write, and the
   binding axis is pre-registered; the *proportion* is not.
-- **There is no held-out set.** The rule table rules on exactly the 24 change ids this corpus emits,
-  so "0 unclassified" is tautological. And eight of those rules were written *after* seeing a score
-  — a real bug fix, disclosed below, but it makes 3.2% a post-selection number. Reserving a vendor
-  the rules have never seen is the right fix and it is not done.
+- **Every development-corpus figure is post-selection.** Eight rules were written after seeing a
+  score on it, so 3.2% / F1 0.963 are development numbers. The held-out slice above is the unbiased
+  estimate and it is far worse: **F1 0.328**. Where this README quotes 0.963 it says which corpus.
+- **The held-out slice is a *data* hold-out, not a *vendor* hold-out.** Same three vendors, new
+  services. It tests whether the rule logic generalises to unseen call sites and changes; it does not
+  independently test the expressibility table, which is corpus-shaped — 38 of the slice's changes had
+  ids the table has never ruled on, against 0 in the development corpus.
 
 
 - **Compilation proves a type-level incompatibility. It does not prove production breakage.** A

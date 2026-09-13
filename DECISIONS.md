@@ -307,10 +307,23 @@ threshold, the two baselines and the metric list.
 The criterion stays exactly as the blueprint set it: **≥60 compiler-verified call-site breakage
 labels across ≥3 vendors.** It is not lowered, rewritten or reinterpreted.
 
-It is an **absolute count**, so it scales with how much code the generator writes. The canonical
-release corpus and the harness default are both measured and both published, so a reader can see
-which claims scale with corpus volume and which do not. The sweep lives in
-`artifacts/budget_sweep.json`, written by `scripts/budget_sweep.py`.
+It is an **absolute count**, so it scales with how much code the generator writes. Measured rather
+than asserted, by `scripts/budget_sweep.py` into `artifacts/budget_sweep.json`:
+
+| Budget | Admitted call sites | Compiler breakages | Vendors | Kill criterion | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|---|
+| 40 × 3 — harness default | 854 | 52 | 3 | **FAIL** | 0.962 | 0.962 | 0.962 |
+| **120 × 4** — canonical release | 1,338 | **94** | 3 | **PASS** | 0.958 | 0.968 | 0.963 |
+| 200 × 6 — larger | 1,931 | 142 | 3 | **PASS** | 0.958 | 0.965 | 0.961 |
+
+**The count scales almost linearly with corpus size; F1 moves by 0.002 across a 2.3× range.**
+That is the whole point of running it: the kill criterion is sensitive to the budget and the
+predictive metrics are not. Reproduce with `make sweep`;
+[`artifacts/budget_sweep.json`](artifacts/budget_sweep.json) is written by the run.
+
+The kill criterion passes at the canonical budget and fails at the harness default. The predictive
+metrics are rates and are flat across the range, which is the distinction a reader needs: **the
+feasibility claim depends on corpus volume, the quality claim does not.**
 
 ### The confirmatory slice
 
@@ -327,3 +340,86 @@ that gap is the finding.
 
 A pair is excluded **only** if the toolchain cannot process it, never because of its result, and
 every exclusion is counted and published.
+
+---
+
+## ADR-005 — The confirmatory slice was measured, and the system did badly
+
+**Status:** accepted, 2026-09-13, **after** the slice was frozen in `9378d58` and measured once.
+No rule, pattern or table was changed after this number existed. `git log --diff-filter=A` on
+`src/callsite_impact/corpus/holdout.py` and `artifacts/holdout.json` shows the order.
+
+### The number
+
+| | Development corpus | **Held-out slice** |
+|---|---|---|
+| Pairs / vendors | 18 / 3 | 15 / 3 |
+| Admitted call sites | 1,338 | 1,342 |
+| Compiler-verified breakages | 94 | **265** |
+| Precision | 0.958 | **1.000** |
+| Recall | 0.968 | **0.196** |
+| **F1** | **0.963** | **0.328** |
+| False-negative rate | 3.2% | **80.4%** |
+| False-positive rate | 0.3% | **0.0%** |
+
+**Development F1 0.963 was not an estimate of generalisation, and the gap is the proof.** On unseen
+services the system misses four breakages in five. It is still never wrong when it speaks —
+precision 1.000, zero false positives out of 1,077 clean call sites — so the failure is entirely
+silence, not noise.
+
+Per vendor, which is where the story is:
+
+| Vendor | Breakages | Caught | F1 |
+|---|---|---|---|
+| Adyen | 31 | **31** | **1.000** |
+| Twilio | 41 | 17 | 0.586 |
+| Xero | 193 | 4 | 0.041 |
+
+Adyen is perfect on services the rules never saw. Two Xero payroll pairs carry 193 of the 265
+breakages and account for essentially the whole collapse.
+
+### Why: the tool's recall is capped by the differ's recall
+
+Of 213 missed breakages, **84 (39%) are on operations the differ reported no change for at all.**
+No change means no candidate pair, no finding, and a call site that collapses to **UNAFFECTED** —
+confidently wrong — because *"nothing reported here"* is indistinguishable from *"nothing relevant
+here"*.
+
+The mechanism, traced to one character:
+
+```
+revision A   /Employees/{EmployeeId}/LeaveBalances
+revision B   /Employees/{EmployeeID}/LeaveBalances
+```
+
+`oasdiff` normalises path-parameter names, so it reports **nothing** — not in `breaking`, not in the
+full `changelog`. By its semantics that is right: it is the same endpoint. `openapi-typescript` keys
+`paths` on the literal string, so `paths["/Employees/{EmployeeId}/LeaveBalances"]` ceases to exist
+and every call site on it is `TS2339`. **30 of the 44 path keys that vanish across the slice are
+parameter-name renames alone**, all of them in the two Xero payroll pairs.
+
+**Both tools are defensible and they disagree, and the disagreement is the finding.** Whether
+renaming a path parameter is a breaking change depends on the client: a generated, path-keyed client
+breaks; a hand-written one using a URL template does not. The compiler is measuring the binding it
+was given.
+
+The remaining 129 misses are on operations the differ *did* flag: 61 Xero and 24 Twilio abstained
+(UNKNOWN), and the slice contained **38 changes whose ids the table has never ruled on** —
+`api-path-removed-without-deprecation`, `api-removed-without-deprecation`,
+`response-property-type-generalized`, `request-parameter-enum-value-removed` — which abstain by
+design and are counted as misses in the strict view.
+
+### What is deliberately not done
+
+**None of this is fixed.** Ruling on four more change ids and teaching the pipeline to diff path keys
+literally would plainly raise the held-out score — which is exactly why it must not happen now. The
+slice is spent; tuning against it would convert the only unbiased number in the repository into a
+second development number. The honest closure is to publish 0.328 and name the two defects:
+
+1. **Candidate pairs come only from the differ.** A breakage the differ does not report cannot be
+   found, and is reported as UNAFFECTED rather than UNKNOWN. Fixing this means deriving candidates
+   from the call sites as well — comparing the operation keys each revision actually emits.
+2. **The expressibility table is corpus-shaped.** 38 unruled changes in 15 pairs, against 0 in the
+   development corpus, is the tautology of *"0 unclassified"* being exposed by unseen data.
+
+A future increment that addresses either must be measured on a **new** frozen slice, not this one.

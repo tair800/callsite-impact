@@ -91,7 +91,7 @@ export function MetricsComparison({
   return (
     <section className="panel" data-testid="metrics-comparison">
       <div className="panel-head flex flex-wrap items-center gap-3 rounded-t-[5px] px-4 py-2">
-        <h2 className="kicker">System versus both predeclared baselines</h2>
+        <h2 className="kicker">System versus both predeclared baselines — development corpus</h2>
         <div
           className="ml-auto flex items-center gap-1"
           role="group"

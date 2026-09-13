@@ -30,6 +30,7 @@ from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Final
 
+from callsite_impact.corpus.holdout import HOLDOUT_ADYEN, HOLDOUT_TWILIO, HOLDOUT_XERO
 from callsite_impact.corpus.manifest import (
     CorpusManifest,
     index_specs,
@@ -46,6 +47,7 @@ __all__ = ["main"]
 LICENCE: Final = "MIT"
 UPSTREAM_DIR: Final = "corpus/upstream"
 MANIFEST_PATH: Final = "corpus/manifest.json"
+HOLDOUT_MANIFEST_PATH: Final = "corpus/holdout-manifest.json"
 _HTTP_TIMEOUT_S: Final = 600
 _GIT_TIMEOUT_S: Final = 1800
 
@@ -201,6 +203,18 @@ _STRIPE_AFTER: Final = ("30d3391cc09a0f67ad29bee002f570811b19e1da", "2026-08-26T
 # right; the "after" side is the newest commit touching that file. The gap is roughly six years,
 # which is why this vendor contributes the `response-property-became-nullable` class almost alone.
 _TWILIO_BEFORE: Final = ("111a7cb947056d26ec77fed5f9365007de2a0ced", "2020-12-08T22:01:44Z")
+#: The hold-out's "after" revision. One commit for all six products, the newest that touches them.
+_TWILIO_HOLDOUT_AFTER: Final = (
+    "591755b562834daae097da2371e821f349c5f489",
+    "2026-08-11T16:43:54+05:30",
+)
+
+#: The hold-out's "before" revision, the same third-oldest-commit rule the development corpus uses.
+_XERO_HOLDOUT_BEFORE: Final = (
+    "33d2244c8f368889758fa758d26a04aeb6c55b68",
+    "2020-09-25T13:19:01-07:00",
+)
+
 _TWILIO_SPECS: Final = (
     (
         "flex",
@@ -309,6 +323,48 @@ def _build_pairs() -> tuple[tuple[str, _Pin, _Pin], ...]:
 
 
 PAIRS: Final = _build_pairs()
+
+
+def _build_holdout_pairs() -> tuple[tuple[str, _Pin, _Pin], ...]:
+    """The confirmatory slice from `holdout.py`, built with the same pins as the development corpus.
+
+    Same vendors, same commits, same machinery -- only the services differ, and they differ by name
+    rather than by anything measured. See ADR-004 and `corpus/holdout.py` for why the order in which
+    this was committed is the whole point.
+    """
+    pairs: list[tuple[str, _Pin, _Pin]] = []
+
+    for service, stem, (before_v, after_v) in HOLDOUT_ADYEN:
+        pairs.append(
+            (
+                f"holdout-adyen-{service}-{before_v}-to-{after_v}",
+                _adyen(service, stem, before_v),
+                _adyen(service, stem, after_v),
+            )
+        )
+
+    for service, filename in HOLDOUT_TWILIO:
+        pairs.append(
+            (
+                f"holdout-twilio-{service}",
+                _twilio(service, filename, *_TWILIO_BEFORE),
+                _twilio(service, filename, *_TWILIO_HOLDOUT_AFTER),
+            )
+        )
+
+    for service, filename in HOLDOUT_XERO:
+        pairs.append(
+            (
+                f"holdout-xero-{service}",
+                _xero(service, filename, *_XERO_HOLDOUT_BEFORE),
+                _xero(service, filename, _XERO_AFTER, _XERO_AFTER_DATE),
+            )
+        )
+
+    return tuple(pairs)
+
+
+HOLDOUT_PAIRS: Final = _build_holdout_pairs()
 
 
 # ------------------------------------------------------------------------------------ local paths
@@ -566,11 +622,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--force", action="store_true", help="refetch every spec even if its hash already matches"
     )
+    parser.add_argument(
+        "--holdout",
+        action="store_true",
+        help=(
+            "acquire the confirmatory slice defined in corpus/holdout.py instead of the "
+            "development corpus, writing corpus/holdout-manifest.json. See ADR-004."
+        ),
+    )
     args = parser.parse_args(argv)
 
     root: Path = args.root.resolve()
     generated_at: str = args.generated_at or datetime.now(UTC).isoformat(timespec="seconds")
-    manifest_path = root / PurePosixPath(MANIFEST_PATH)
+    manifest_path = root / PurePosixPath(HOLDOUT_MANIFEST_PATH if args.holdout else MANIFEST_PATH)
+    selected = HOLDOUT_PAIRS if args.holdout else PAIRS
 
     known: dict[tuple[str, str, str], VendorSpec] = {}
     if manifest_path.is_file() and not args.force:
@@ -580,7 +645,7 @@ def main(argv: list[str] | None = None) -> int:
 
     acquired: dict[tuple[str, str, str], _Acquired] = {}
     pairs: list[SpecPair] = []
-    for pair_id, before_pin, after_pin in PAIRS:
+    for pair_id, before_pin, after_pin in selected:
         print(f"{pair_id}")
         sides: list[VendorSpec] = []
         for pin in (before_pin, after_pin):

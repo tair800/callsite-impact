@@ -1,0 +1,381 @@
+{
+  "generated_at": "2026-09-13T06:55:37+00:00",
+  "oasdiff_version": "oasdiff v1.29.1",
+  "pairs": [
+    {
+      "pair_id": "holdout-adyen-legal-entity-v3-to-v4",
+      "vendor": "adyen",
+      "service": "legal-entity",
+      "before": {
+        "vendor": "adyen",
+        "service": "legal-entity",
+        "revision": "v3",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/LegalEntityService-v3.json",
+        "licence": "MIT",
+        "sha256": "2ae704e1705b9775ed326ab5311dad551552ce539c54919c033157ad39fdca58",
+        "local_path": "corpus/upstream/specs/adyen/legal-entity-v3.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "legal-entity",
+        "revision": "v4",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/LegalEntityService-v4.json",
+        "licence": "MIT",
+        "sha256": "af8c939f2cd9585b09bcee4b584370ece32586d46463c9f8f2c8a3b5b83ea9d8",
+        "local_path": "corpus/upstream/specs/adyen/legal-entity-v4.json"
+      }
+    },
+    {
+      "pair_id": "holdout-adyen-transfer-v3-to-v4",
+      "vendor": "adyen",
+      "service": "transfer",
+      "before": {
+        "vendor": "adyen",
+        "service": "transfer",
+        "revision": "v3",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/TransferService-v3.json",
+        "licence": "MIT",
+        "sha256": "514d1ed036e18d4b8eb96aca9a15f5f70dc1bbfbb670cf06f24e9c2324a69c9a",
+        "local_path": "corpus/upstream/specs/adyen/transfer-v3.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "transfer",
+        "revision": "v4",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/TransferService-v4.json",
+        "licence": "MIT",
+        "sha256": "86ddb9fb0723d82bc7d954f0d09936b3a7088c5e4c5895f4668935eef49d3a6e",
+        "local_path": "corpus/upstream/specs/adyen/transfer-v4.json"
+      }
+    },
+    {
+      "pair_id": "holdout-adyen-payment-v67-to-v68",
+      "vendor": "adyen",
+      "service": "payment",
+      "before": {
+        "vendor": "adyen",
+        "service": "payment",
+        "revision": "v67",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/PaymentService-v67.json",
+        "licence": "MIT",
+        "sha256": "14574103d0a6eb08a0c8eb73ff68b5afdd6726adb056777578f6bba386323891",
+        "local_path": "corpus/upstream/specs/adyen/payment-v67.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "payment",
+        "revision": "v68",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/PaymentService-v68.json",
+        "licence": "MIT",
+        "sha256": "82f2803ec1b92062ab3e72d996d1f61b34cb0e8b449e0bd70b97bef6c032032f",
+        "local_path": "corpus/upstream/specs/adyen/payment-v68.json"
+      }
+    },
+    {
+      "pair_id": "holdout-adyen-payout-v67-to-v68",
+      "vendor": "adyen",
+      "service": "payout",
+      "before": {
+        "vendor": "adyen",
+        "service": "payout",
+        "revision": "v67",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/PayoutService-v67.json",
+        "licence": "MIT",
+        "sha256": "2e76c4e5a310c5a2e9a8a0b1bb7d35ee54b8464379e383a0160056cbf9074f51",
+        "local_path": "corpus/upstream/specs/adyen/payout-v67.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "payout",
+        "revision": "v68",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/PayoutService-v68.json",
+        "licence": "MIT",
+        "sha256": "4352f9b3cd171b9d4a1c621440e82ca3a3323c85906de7591c4f10a88b53a5cd",
+        "local_path": "corpus/upstream/specs/adyen/payout-v68.json"
+      }
+    },
+    {
+      "pair_id": "holdout-adyen-recurring-v67-to-v68",
+      "vendor": "adyen",
+      "service": "recurring",
+      "before": {
+        "vendor": "adyen",
+        "service": "recurring",
+        "revision": "v67",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/RecurringService-v67.json",
+        "licence": "MIT",
+        "sha256": "2d2332199b61ec9358c690722daf96449a2622d7afa4e4583b78de287f080fd5",
+        "local_path": "corpus/upstream/specs/adyen/recurring-v67.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "recurring",
+        "revision": "v68",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/RecurringService-v68.json",
+        "licence": "MIT",
+        "sha256": "5cea6c5661df0830afb4fde5cbfb5d86b4cfb617fe25317b8c16f6d66f074b10",
+        "local_path": "corpus/upstream/specs/adyen/recurring-v68.json"
+      }
+    },
+    {
+      "pair_id": "holdout-adyen-management-v1-to-v3",
+      "vendor": "adyen",
+      "service": "management",
+      "before": {
+        "vendor": "adyen",
+        "service": "management",
+        "revision": "v1",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/ManagementService-v1.json",
+        "licence": "MIT",
+        "sha256": "1089ade06e176cc5f7fd861a24382cb85532a0a70051ac5d689ab9a87c27fe16",
+        "local_path": "corpus/upstream/specs/adyen/management-v1.json"
+      },
+      "after": {
+        "vendor": "adyen",
+        "service": "management",
+        "revision": "v3",
+        "revision_date": "2026-08-04T10:21:09+02:00",
+        "source_url": "https://github.com/Adyen/adyen-openapi/blob/f0d0bd47b721d1b4e2c86e8b3aad706ecb88423a/json/ManagementService-v3.json",
+        "licence": "MIT",
+        "sha256": "f634b6afa6536597c0885dab710a35feec94ba34fe77f95056f3a15d318ab212",
+        "local_path": "corpus/upstream/specs/adyen/management-v3.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-lookups",
+      "vendor": "twilio",
+      "service": "lookups",
+      "before": {
+        "vendor": "twilio",
+        "service": "lookups",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_lookups_v1.json",
+        "licence": "MIT",
+        "sha256": "e659ba105245209e87da7e208b1d59680569bfc13482e222322be4044a397f9d",
+        "local_path": "corpus/upstream/specs/twilio/lookups-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "lookups",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_lookups_v1.json",
+        "licence": "MIT",
+        "sha256": "5f405e91094a0980ba154ddad9c95145263c7babfb62c0d639c7f02d37172781",
+        "local_path": "corpus/upstream/specs/twilio/lookups-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-notify",
+      "vendor": "twilio",
+      "service": "notify",
+      "before": {
+        "vendor": "twilio",
+        "service": "notify",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_notify_v1.json",
+        "licence": "MIT",
+        "sha256": "35189dd564148dfe22a34356f1b879643956d934b075fe3f4a92dc689f31b1e3",
+        "local_path": "corpus/upstream/specs/twilio/notify-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "notify",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_notify_v1.json",
+        "licence": "MIT",
+        "sha256": "2d30a1df61483a5f5f1b8e7ae547a135a1db29188bfc149e830242d236c01495",
+        "local_path": "corpus/upstream/specs/twilio/notify-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-proxy",
+      "vendor": "twilio",
+      "service": "proxy",
+      "before": {
+        "vendor": "twilio",
+        "service": "proxy",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_proxy_v1.json",
+        "licence": "MIT",
+        "sha256": "a800f083afd4c2473e63504f67229832ec02d6ec886599a3aa54f6371f0d33ba",
+        "local_path": "corpus/upstream/specs/twilio/proxy-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "proxy",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_proxy_v1.json",
+        "licence": "MIT",
+        "sha256": "a2e6d27b3ecd5278f562f53c391245cc4e7a18a1625060fffe885cc9fdacce41",
+        "local_path": "corpus/upstream/specs/twilio/proxy-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-serverless",
+      "vendor": "twilio",
+      "service": "serverless",
+      "before": {
+        "vendor": "twilio",
+        "service": "serverless",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_serverless_v1.json",
+        "licence": "MIT",
+        "sha256": "326b22895b837ded36cb6afaf705c2c6247e2ec12008545f81a8aea4b6013284",
+        "local_path": "corpus/upstream/specs/twilio/serverless-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "serverless",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_serverless_v1.json",
+        "licence": "MIT",
+        "sha256": "74f59534eb423d280a5fa93570b92ff1bb71cbb04441cd2c9036f5a8c248e455",
+        "local_path": "corpus/upstream/specs/twilio/serverless-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-studio",
+      "vendor": "twilio",
+      "service": "studio",
+      "before": {
+        "vendor": "twilio",
+        "service": "studio",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_studio_v2.json",
+        "licence": "MIT",
+        "sha256": "0563a276e88e91f71069fcd54edf5886ab62247debd3ac8c55d6364bb75975d2",
+        "local_path": "corpus/upstream/specs/twilio/studio-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "studio",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_studio_v2.json",
+        "licence": "MIT",
+        "sha256": "c384dd0ef33198d3b592beaf9c1d095c338063969ab4ce92ddc5c2242c4677a3",
+        "local_path": "corpus/upstream/specs/twilio/studio-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-twilio-supersim",
+      "vendor": "twilio",
+      "service": "supersim",
+      "before": {
+        "vendor": "twilio",
+        "service": "supersim",
+        "revision": "111a7cb947056d26ec77fed5f9365007de2a0ced",
+        "revision_date": "2020-12-08T22:01:44Z",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/111a7cb947056d26ec77fed5f9365007de2a0ced/spec/json/twilio_supersim_v1.json",
+        "licence": "MIT",
+        "sha256": "425ec28cab3009c87a75ed6fe22d1ffe8ed79beb40e936100187032346c64301",
+        "local_path": "corpus/upstream/specs/twilio/supersim-111a7cb94705.json"
+      },
+      "after": {
+        "vendor": "twilio",
+        "service": "supersim",
+        "revision": "591755b562834daae097da2371e821f349c5f489",
+        "revision_date": "2026-08-11T16:43:54+05:30",
+        "source_url": "https://github.com/twilio/twilio-oai/blob/591755b562834daae097da2371e821f349c5f489/spec/json/twilio_supersim_v1.json",
+        "licence": "MIT",
+        "sha256": "c0baa6eaf932fc01731c8b3f4bb6d72f932a341b198877ac3635b49df678cd89",
+        "local_path": "corpus/upstream/specs/twilio/supersim-591755b56283.json"
+      }
+    },
+    {
+      "pair_id": "holdout-xero-payroll-nz",
+      "vendor": "xero",
+      "service": "payroll-nz",
+      "before": {
+        "vendor": "xero",
+        "service": "payroll-nz",
+        "revision": "33d2244c8f368889758fa758d26a04aeb6c55b68",
+        "revision_date": "2020-09-25T13:19:01-07:00",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/33d2244c8f368889758fa758d26a04aeb6c55b68/xero-payroll-nz.yaml",
+        "licence": "MIT",
+        "sha256": "b0d84b89748dc24d49024c2f3be8663f38bc2231b933f7172565d0fecd6b3ad4",
+        "local_path": "corpus/upstream/specs/xero/payroll-nz-33d2244c8f36.yaml"
+      },
+      "after": {
+        "vendor": "xero",
+        "service": "payroll-nz",
+        "revision": "448060d7829cae23166a2e443be48c2f2422280f",
+        "revision_date": "2026-09-03T22:30:59Z",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero-payroll-nz.yaml",
+        "licence": "MIT",
+        "sha256": "635e880b543d5f9b46afecb9ac79b9e26e58654f2ff383024e46436e338db844",
+        "local_path": "corpus/upstream/specs/xero/payroll-nz-448060d7829c.yaml"
+      }
+    },
+    {
+      "pair_id": "holdout-xero-payroll-uk",
+      "vendor": "xero",
+      "service": "payroll-uk",
+      "before": {
+        "vendor": "xero",
+        "service": "payroll-uk",
+        "revision": "33d2244c8f368889758fa758d26a04aeb6c55b68",
+        "revision_date": "2020-09-25T13:19:01-07:00",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/33d2244c8f368889758fa758d26a04aeb6c55b68/xero-payroll-uk.yaml",
+        "licence": "MIT",
+        "sha256": "b88fd712e6ac3cf53d17bd4e798c4f9d8f2ec5b343dbb8ff94b40105c84ef823",
+        "local_path": "corpus/upstream/specs/xero/payroll-uk-33d2244c8f36.yaml"
+      },
+      "after": {
+        "vendor": "xero",
+        "service": "payroll-uk",
+        "revision": "448060d7829cae23166a2e443be48c2f2422280f",
+        "revision_date": "2026-09-03T22:30:59Z",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero-payroll-uk.yaml",
+        "licence": "MIT",
+        "sha256": "9c587a43f33e84781dfb9ea7cf884ee241b47e461aa3867945258f3cb531683d",
+        "local_path": "corpus/upstream/specs/xero/payroll-uk-448060d7829c.yaml"
+      }
+    },
+    {
+      "pair_id": "holdout-xero-assets",
+      "vendor": "xero",
+      "service": "assets",
+      "before": {
+        "vendor": "xero",
+        "service": "assets",
+        "revision": "33d2244c8f368889758fa758d26a04aeb6c55b68",
+        "revision_date": "2020-09-25T13:19:01-07:00",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/33d2244c8f368889758fa758d26a04aeb6c55b68/xero_assets.yaml",
+        "licence": "MIT",
+        "sha256": "b7a6732e064f2a3c73bf4b596b6b5214a45bf459b77debf42b4a57dcc16e63ec",
+        "local_path": "corpus/upstream/specs/xero/assets-33d2244c8f36.yaml"
+      },
+      "after": {
+        "vendor": "xero",
+        "service": "assets",
+        "revision": "448060d7829cae23166a2e443be48c2f2422280f",
+        "revision_date": "2026-09-03T22:30:59Z",
+        "source_url": "https://github.com/XeroAPI/Xero-OpenAPI/blob/448060d7829cae23166a2e443be48c2f2422280f/xero_assets.yaml",
+        "licence": "MIT",
+        "sha256": "fee420107a6555a787ca8c41b7e0319a519c502a8093d33eebe5b3b5fba7df26",
+        "local_path": "corpus/upstream/specs/xero/assets-448060d7829c.yaml"
+      }
+    }
+  ]
+}

@@ -38,6 +38,7 @@ const REQUEST_TIMEOUT_MS = 8_000;
 /** The two file names, fixed by `measure.py` and `write_detail`. */
 const EVALUATION_FILE = "evaluation.json";
 const DETAIL_FILE = "findings.json";
+const HOLDOUT_FILE = "holdout.json";
 
 function apiBase(): string | null {
   const raw = process.env.IMPACT_API_BASE_URL?.trim();
@@ -198,6 +199,25 @@ export async function loadSummary(): Promise<Loaded<Summary>> {
     };
   }
   return { ok: true, data: file.value as unknown as Summary, source: "disk" };
+}
+
+/**
+ * The confirmatory slice, when one has been measured.
+ *
+ * Read from disk only, and optional. It is a second scored corpus rather than a view of the first,
+ * so the API — which serves one artifact — has nothing to return for it. Absent is a legitimate
+ * state: a checkout that has not run the slice still renders a console, it just does not claim a
+ * generalisation estimate it does not have.
+ */
+export async function loadHoldout(): Promise<Summary | null> {
+  const file = await readJsonFile(HOLDOUT_FILE);
+  if ("malformed" in file || !file.found) {
+    return null;
+  }
+  if (!hasKeys(file.value, [...SUMMARY_KEYS])) {
+    return null;
+  }
+  return file.value as unknown as Summary;
 }
 
 /** Every spec, with the checksums a reader can verify the bytes against. */

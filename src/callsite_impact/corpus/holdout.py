@@ -14,22 +14,22 @@ and which revisions exist.
 **What this slice does and does not test.** It is a *data* hold-out, not a *vendor* hold-out. The
 services are new and so are the call sites, the changes and the compiler labels, so it tests whether
 the rule logic — path matching, pinned-type detection, optional-chaining, the abstention gate —
-generalises to instances nobody tuned against. It does **not** independently test the expressibility
-table: these are the same three vendors and their change ids will largely be ids already ruled on.
-An id that has not been ruled on falls through to `UNCLASSIFIED` and abstains, which is the honest
-behaviour and will show up in the strict score rather than being hidden.
+generalises to instances nobody tuned against. It does **not** independently test the
+expressibility table: these are the same three vendors and their change ids will largely be ids
+already ruled on. An id that has not been ruled on falls through to `UNCLASSIFIED` and abstains,
+which is the honest behaviour and shows up in the strict score rather than hiding in it.
 
 **The one exclusion rule, declared here rather than applied later.** A pair may be dropped **only**
-when the toolchain cannot process it at all — `oasdiff` refuses the specification, `openapi-typescript`
-fails, or the generator emits nothing. A pair is **never** dropped because of the result it produced.
-Every exclusion is counted and published beside the score.
+when the toolchain cannot process it at all — the differ refuses the specification, type generation
+fails, or the generator emits nothing. A pair is **never** dropped because of the result it
+produced. Every exclusion is counted and published beside the score.
 """
 
 from __future__ import annotations
 
 from typing import Final
 
-__all__ = ["HOLDOUT_ADYEN", "HOLDOUT_TWILIO", "HOLDOUT_XERO", "EXCLUSION_RULE"]
+__all__ = ["EXCLUSION_RULE", "HOLDOUT_ADYEN", "HOLDOUT_TWILIO", "HOLDOUT_XERO"]
 
 EXCLUSION_RULE: Final = (
     "A pair is excluded only when the toolchain cannot process it (the differ refuses the "
