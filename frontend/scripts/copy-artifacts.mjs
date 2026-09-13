@@ -20,7 +20,11 @@ const frontend = path.resolve(here, "..");
 const source = path.resolve(frontend, "..", "artifacts");
 const destination = path.join(frontend, "artifacts");
 
-const FILES = ["evaluation.json", "findings.json"];
+// `holdout.json` is optional -- a checkout that has not run the confirmatory slice still
+// builds, and the console renders the "not measured" state rather than implying a number it
+// does not have. Omitting it here would produce exactly that false impression on a deployment
+// where the slice HAS been measured, which is the direction that matters.
+const FILES = ["evaluation.json", "findings.json", "holdout.json"];
 
 async function main() {
   let copied = 0;

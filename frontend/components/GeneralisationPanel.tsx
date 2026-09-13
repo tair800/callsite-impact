@@ -21,7 +21,7 @@ export function GeneralisationPanel({
   if (!holdout) {
     return (
       <section className="panel">
-        <h2 className="panel-title">Generalisation</h2>
+        <h2 className="kicker">Generalisation</h2>
         <div className="p-4 text-[13px] leading-relaxed text-[var(--color-muted)]">
           No held-out slice has been measured in this checkout, so every figure below is a{" "}
           <strong className="text-[var(--color-text)]">development-corpus</strong> number: the rule
@@ -63,7 +63,7 @@ export function GeneralisationPanel({
 
   return (
     <section className="panel">
-      <h2 className="panel-title">Generalisation — development corpus versus a held-out slice</h2>
+      <h2 className="kicker">Generalisation — development corpus versus a held-out slice</h2>
       <div className="overflow-x-auto">
         <table className="grid-table">
           <thead>
