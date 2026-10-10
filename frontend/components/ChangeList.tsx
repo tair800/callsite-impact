@@ -12,7 +12,7 @@ import type { ChangeRow } from "@/lib/types";
  * of safety. A reader should be able to count them by eye.
  */
 
-function railClass(expressibility: string): string {
+function railClass(expressibility: ChangeRow["expressibility"]): string {
   if (expressibility === "not_type_expressible") return "change-inexpressible";
   if (expressibility === "unclassified") return "change-unclassified";
   return "change-expressible";
@@ -46,7 +46,7 @@ export function ChangeList({
           {changes.map((change, index) => (
             <li
               key={`${change.change_id}-${change.method}-${change.path}-${index}`}
-              className={`px-4 py-2.5 ${railClass(String(change.expressibility))}`}
+              className={`px-4 py-2.5 ${railClass(change.expressibility)}`}
               data-testid="change-row"
               data-expressibility={change.expressibility}
             >
