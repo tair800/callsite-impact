@@ -56,6 +56,9 @@ export function ChangeList({
                   {change.change_id}
                 </code>
                 <ExpressibilityChip value={change.expressibility} />
+                {change.expressibility === "not_type_expressible" ? (
+                  <span className="sr-only">not type-expressible</span>
+                ) : null}
                 <code className="mono ml-auto text-[11px] text-[var(--color-dim)]">
                   {change.method.toUpperCase()} {change.path}
                 </code>
