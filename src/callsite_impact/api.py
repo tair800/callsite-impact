@@ -40,7 +40,10 @@ class MetaView(BaseModel):
 
 
 def _load(path: Path) -> dict[str, Any]:
-    loaded: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        loaded: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{path}: invalid JSON") from exc
     return loaded
 
 
