@@ -73,7 +73,7 @@ export function GeneralisationPanel({
                 Development corpus
               </th>
               <th scope="col" className="num col-headline">
-                Held-out slice
+                Held-out slice <span className="sr-only">(unbiased estimate)</span>
               </th>
             </tr>
           </thead>
