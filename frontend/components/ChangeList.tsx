@@ -49,6 +49,7 @@ export function ChangeList({
               className={`px-4 py-2.5 ${railClass(change.expressibility)}`}
               data-testid="change-row"
               data-expressibility={change.expressibility}
+              aria-label={`${change.change_id} ${change.method.toUpperCase()} ${change.path}`}
             >
               <div className="flex flex-wrap items-center gap-2">
                 <LevelBadge level={change.level} />
