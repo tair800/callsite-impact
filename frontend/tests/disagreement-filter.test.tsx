@@ -56,6 +56,17 @@ describe("CallsiteTable filters", () => {
     expect(screen.getByTestId("row-count")).toHaveTextContent("Showing 3 of 6");
   });
 
+  it("announces the new count when a filter changes it", () => {
+    renderTable();
+    const shown = screen.getByTestId("row-count");
+    expect(shown).toHaveAttribute("aria-live", "polite");
+    expect(shown).toHaveAttribute("aria-atomic", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "system ≠ compiler" }));
+    expect(screen.getByTestId("row-count")).toBe(shown);
+    expect(shown).toHaveTextContent("Showing 3 of 6");
+  });
+
   it("filters to the rows where the baseline disagrees, which is a different set", () => {
     renderTable();
     fireEvent.click(screen.getByRole("button", { name: "baseline ≠ compiler" }));

@@ -102,7 +102,7 @@ export function CallsiteTable({
       </div>
 
       <p className="border-b border-[var(--color-line-soft)] px-4 py-2 text-[11.5px] text-[var(--color-muted)]">
-        <span data-testid="row-count">
+        <span data-testid="row-count" aria-live="polite" aria-atomic="true">
           Showing {count(rows.length)} of {count(callsites.length)} sampled call sites.
         </span>{" "}
         <span className="text-[var(--color-dim)]">{sampling}</span>{" "}
