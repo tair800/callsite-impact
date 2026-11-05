@@ -10,7 +10,13 @@ const LINKS: { href: string; label: string }[] = [
 ];
 
 function isActive(pathname: string, href: string): boolean {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** `page` for the page being shown; `true` for the section a nested page sits under. */
+function currentFor(pathname: string, href: string): "page" | "true" | undefined {
+  if (pathname === href) return "page";
+  return isActive(pathname, href) ? "true" : undefined;
 }
 
 export function Nav(): React.ReactElement {
@@ -28,6 +34,7 @@ export function Nav(): React.ReactElement {
               href={link.href}
               className="nav-link"
               data-active={isActive(pathname, link.href)}
+              aria-current={currentFor(pathname, link.href)}
             >
               {link.label}
             </Link>
